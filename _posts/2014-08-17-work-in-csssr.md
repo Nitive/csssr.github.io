@@ -3,6 +3,7 @@ layout:     post
 title:      Работа в CSSSR — взгляд изнутри
 date:       2014-08-17 10:10:00
 summary:    CSSSR — это не только безупречно сверстанные сайты, CSSSR — это прежде всего команда.
+category: post
 ---
 
 ![tizer](/images/tizer.png)

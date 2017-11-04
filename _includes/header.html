@@ -1,11 +1,15 @@
 <header class="site-header px2 px-responsive">
 	<div class="wrap">
-		<div class="measure">
-			<a href="/" class="site-title"> </a>
+		<nav class="header measure">
+			<a href="/" class="site-title" aria-label="CSSSR"></a>
+			<div class="header-links">
+				<a href="/" class="header-link {% if page.url == '/index.html' %}header-link_active{% endif %}">Посты</a>
+				<a href="/cgc" class="header-link {% if page.url == '/cgc/index.html' %}header-link_active{% endif %}">CGC</a>
+			</div>
 			{% if site.show_social_icons %}
 				{% include social_links.html %}
 			{% endif %}
-		</div>
+		</nav>
 	</div>
 	<div class="clearfix"></div>
 </header>

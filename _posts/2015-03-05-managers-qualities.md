@@ -5,6 +5,7 @@ date:       2015-03-05 14:55:00
 summary:    Пост про то, как мы учились нанимать менеджеров, и что из этого получилось.
 author:		lise_yy
 authorLink:	https://twitter.com/lise_yy
+category: post
 ---
 
 ![EYanovskaya](/images/eyanovskaya.png)

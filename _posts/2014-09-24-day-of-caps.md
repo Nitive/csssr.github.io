@@ -3,6 +3,7 @@ layout:     post
 title:      ДЕНЬ КАПСА
 date:       2014-09-24 09:34:00
 summary:    24 СЕНТЯБРЯ В CSSSR ОТМЕЧАЕТСЯ ДЕНЬ КАПСА.
+category: post
 ---
 ![24 сентября — день капса](/images/day-of-caps.jpg)
 

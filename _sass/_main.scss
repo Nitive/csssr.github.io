@@ -73,14 +73,12 @@ body {
 }
 
 .site-header nav a {
-  font-size: 1rem;
   color: #666;
 }
 
 .site-header nav a:hover {
   color: #444;
   opacity: 1;
-  border-bottom: 2px solid #444;
 }
 
 .site-nav a + a {
@@ -344,6 +342,7 @@ h6,
 }
 
 .social-icons {
+    margin-left: auto;
     font-size: 1.25rem;
     float: right;
     padding-top: 3px;
@@ -367,11 +366,45 @@ h6,
     @extend %logo
 }
 
-@media screen and (min-width: 48em) {
-  .site-header .site-title {
-    float: left;
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.header-links {
+  display: inline-block;
+  margin-left: 20px;
+  align-self: flex-end;
+  font-size: 18px;
+  line-height: 20px;
+
+  @media screen and (max-width: 450px) {
+    margin-top: 20px;
+    margin-left: 0;
+    order: 2;
+    width: 100%;
+    font-size: 20px;
+  }
+}
+
+.header-link {
+  font-weight: 500 !important;
+
+  &_active {
+    color: #333 !important;
   }
 
+  &:not(:first-child) {
+    margin-left: 10px;
+  }
+
+  &:hover {
+    box-shadow: 0 2px 0 #444;
+  }
+}
+
+@media screen and (min-width: 48em) {
   .meta,
   .post-meta {
     margin: 0;
@@ -453,14 +486,6 @@ h6,
   .h4,
   h4 {
     font-size: 1rem;
-  }
-
-  .site-header {
-    text-align: center;
-  }
-
-  .site-header .site-title {
-    float: left;
   }
 
   .site-header .site-nav {

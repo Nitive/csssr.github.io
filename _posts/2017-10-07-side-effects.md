@@ -4,6 +4,7 @@ title: Осторожно! Возможны побочные эффекты
 summary: Разбираемся с тем, что такое сайд-эффекты и что они несут нашему коду
 author: bracketsarrows
 authorLink: https://twitter.com/bracketsarrows
+category: post
 ---
 
 > Начинать нужно с того, что сеет сомнение.

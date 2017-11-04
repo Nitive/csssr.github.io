@@ -4,6 +4,7 @@ title:      Unplug yourself — опыт CSSSR
 date:       2015-03-07 16:20:00
 summary:    CSSSR решили написать о своём опыте без девайсов в честь мировой акции Unplug Yourself.
 author:		Анастасия, Алек, Елизавета
+category: post
 ---
 
 Этот пост посвящается акции [Unplug yourself](http://bit.ly/18ZOvSk).

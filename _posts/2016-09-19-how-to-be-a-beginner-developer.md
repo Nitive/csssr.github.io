@@ -3,6 +3,7 @@ layout:  post
 title:   Как быть начинающим разработчиком и не сойти с ума
 author:  Menma26
 authorLink: https://twitter.com/Menma26
+category: post
 ---
 
 ![image](/images/fry.jpeg)

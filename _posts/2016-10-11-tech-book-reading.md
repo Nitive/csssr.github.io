@@ -3,6 +3,7 @@ layout:  post
 title:   Алгоритм чтения книг по программированию
 author:  bvanyushin
 authorLink: https://twitter.com/bvanyushin
+category: post
 ---
 
 Всем привет.

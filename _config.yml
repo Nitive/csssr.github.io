@@ -25,12 +25,20 @@ paypal_url:
 flattr_button:
 
 # Build settings
-gems: [jekyll-paginate]
+plugins:
+  - jekyll-paginate-v2
 markdown:     kramdown
 kramdown:
   input: GFM
-permalink:    pretty
-paginate:     10
+
+permalink: /:year/:month/:day/:title
+
+pagination:
+  enabled: true
+  per_page: 10
+  permalink: '/page:num/'
+  sort_reverse: true
+
 sass:
   compressed: true
   style: :compressed

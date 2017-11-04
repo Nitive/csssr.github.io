@@ -2,6 +2,7 @@
 layout:     post
 title:      Итоги 2016 года от CSSSR
 author:		Максим
+category: post
 ---
 
 Всем привет! Меня зовут Максим, и я работаю верстальщиком в CSSSR.

@@ -1,14 +1,14 @@
 <div class="social-icons">
 	<div class="left">
 		{% if site.github_username %}
-			<a class="icon icon_github" href="https://github.com/{{ site.github_username }}"></a>
+			<a class="icon icon_github" href="https://github.com/{{ site.github_username }}" aria-label="GitHub"></a>
 		{% endif %}
-		<a class="icon icon_rss" href="{{ "/feed.xml" | prepend: site.baseurl }}"></a>
+		<a class="icon icon_rss" href="{{ "/feed.xml" | prepend: site.baseurl }}" aria-label="RSS"></a>
 		{% if site.twitter_username %}
-			<a class="icon icon_twitter" href="https://twitter.com/{{ site.twitter_username }}"></a>
+			<a class="icon icon_twitter" href="https://twitter.com/{{ site.twitter_username }}" aria-label="Twitter"></a>
 		{% endif %}
 		{% if site.email %}
-			<a class="icon icon_envelope" href="mailto:{{ site.email }}"></a>
+			<a class="icon icon_envelope" href="mailto:{{ site.email }}" aria-label="Напишите нам"></a>
 		{% endif %}
 	</div>
 </div>

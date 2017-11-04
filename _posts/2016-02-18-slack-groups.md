@@ -3,6 +3,7 @@ layout:  post
 title:   Группы в Slack
 date:    2016-02-18 19:01:00
 summary: Лайфхаки о способах обращения сразу к нескольким пользователям в Slack
+category: post
 ---
 
 ![image](/images/slack-groups/slack.png)

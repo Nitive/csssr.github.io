@@ -4,6 +4,7 @@ title:   Правила общения удалённых разработчик
 date:    2016-02-25 18:32:00
 summary: Учимся налаживать общение между разработчиками, решать проблемы быстрее и учиться это делать самостоятельно.
 image: /images/share/how-remote-developers-talk.jpg
+category: post
 ---
 
 ![Правила общения удалённых разработчиков](/images/how-remote-developers-talk/intro.jpg)

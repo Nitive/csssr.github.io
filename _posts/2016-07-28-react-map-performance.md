@@ -4,6 +4,7 @@ title:   Повышаем производительность рендера с
 date:    2016-07-28 23:00:00
 author:  felix_exter
 authorLink: https://twitter.com/felix_exter
+category: post
 ---
 
 ![image](/images/react.png)
