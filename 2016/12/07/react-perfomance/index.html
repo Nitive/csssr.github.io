@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Основы производительности React-приложений &#8211; CSSSR</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.">
+	<meta name="author" content="CSSSR">
+	<meta name="keywords" content="">
+	<link rel="canonical" href="/2016/12/07/react-perfomance/">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/css/main.css" type="text/css">
+
+	<!-- Open Graph -->
+	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Основы производительности React-приложений">
+	<meta property="og:description" content="CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.">
+	<meta property="og:url" content="/2016/12/07/react-perfomance/">
+	<meta property="og:site_name" content="CSSSR">
+	
+
+	<!-- Icons -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<link sizes="57x57" href="/apple-touch-icon-57x57.png" rel="apple-touch-icon">
+	<link sizes="114x114" href="/apple-touch-icon-114x114.png" rel="apple-touch-icon">
+	<link sizes="72x72" href="/apple-touch-icon-72x72.png" rel="apple-touch-icon">
+	<link sizes="144x144" href="/apple-touch-icon-144x144.png" rel="apple-touch-icon">
+	<link sizes="60x60" href="/apple-touch-icon-60x60.png" rel="apple-touch-icon">
+	<link sizes="120x120" href="/apple-touch-icon-120x120.png" rel="apple-touch-icon">
+	<link sizes="76x76" href="/apple-touch-icon-76x76.png" rel="apple-touch-icon">
+	<link sizes="152x152" href="/apple-touch-icon-152x152.png" rel="apple-touch-icon">
+	<link sizes="180x180" href="/apple-touch-icon-180x180.png" rel="apple-touch-icon">
+	<link sizes="192x192" href="/favicon-192x192.png" rel="icon" type="image/png">
+	<link sizes="160x160" href="/favicon-160x160.png" rel="icon" type="image/png">
+	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
+	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
+	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
+	<meta name="application-name" content="Основы производительности React-приложений">
+	<meta name="msapplication-tooltip" content="CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/mstile-large.png">
+	<meta name="msapplication-starturl" content="/2016/12/07/react-perfomance/">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
+	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
+	<meta name="msapplication-wide310x150logo" content="/mstile-wide.png">
+	<meta name="msapplication-square310x310logo" content="/mstile-large.png">
+</head>
+
+<body class="">
+	<div class="site-wrap">
+		<header class="site-header px2 px-responsive">
+	<div class="wrap">
+		<div class="measure">
+			<a href="/" class="site-title"> </a>
+			
+				<div class="social-icons">
+	<div class="left">
+		
+			<a class="icon icon_github" href="https://github.com/CSSSR"></a>
+		
+		<a class="icon icon_rss" href="/feed.xml"></a>
+		
+			<a class="icon icon_twitter" href="https://twitter.com/csssr_dev"></a>
+		
+		
+			<a class="icon icon_envelope" href="mailto:hr@csssr.io"></a>
+		
+	</div>
+</div>
+			
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+		<div class="post p2 p-responsive wrap" role="main">
+			<div class="measure">
+				
+
+
+<div class="post-header mb2">
+	<h1>Основы производительности React-приложений</h1>
+	<span class="post-meta">
+		Dec 7, 2016
+		
+			by <a target="_blank" class="post-author" rel="author" href="https://twitter.com/dzhiriki">dzhiriki</a>
+		
+	</span><br>
+	
+	<span class="post-meta small">12 minute read</span>
+</div>
+
+<article class="post-content">
+	<p>Всем привет! Меня зовут Александр, и я ведущий Javascript-разработчик CSSSR. В данный момент я веду достаточно сложный и крупный проект на Реакте. На проекте есть разработчики разных уровней, некоторым из них было сложно привыкнуть к тому, как ведет себя Реакт и как на нем  разрабатывать крупные приложения. Бóльшая часть недопониманий была с производительностью, о ней и пойдёт речь в статье.</p>
+
+<h2 id="как-работает-react">Как работает React</h2>
+<p>React считается быстрым из-за VirtualDOM. В компоненте есть метод render, который вызывается при каждом обновлении компонента. Затем результат рендера (здесь и далее под рендером будет иметься в виду именно вызов функции render компонента, а не рендер в реальный DOM) обрабатывается Реактом, сравнивается результат текущего рендера с результатом предыдущего и в реальный DOM вносятся только необходимые изменения, а не целиком. Учитывая, что операции с реальным DOM медленные, это должно быть быстрее.</p>
+
+<p>Проблема в том, что операции с VirtualDOM тоже могут быть медленными. Результат рендера Реакта — это многоуровневый объект. Сравнение результатов рендера — это не сравнение двух объектов по ссылке, а их полное, глубокое сравнение. Казалось бы, стоит держать компоненты небольшими, и тогда их перерендер будет происходить быстро.</p>
+
+<p>Но Реакт запускает рендер компонента в двух случаях:</p>
+<ul>
+  <li>Вызов setState;</li>
+  <li>Рендер родителя.</li>
+</ul>
+
+<p>Обратите внимание на формулировку, она точно отражает суть. Не при изменении стейта компонента или при изменении его пропсов, а именно после вызова setState и после рендера родителя.</p>
+
+<p>Пример для того, чтобы понять в чем разница:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Parent</span> <span class="kd">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">index</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="p">};</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Render Parent'</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+      <span class="nx">Parent</span><span class="p">:</span> <span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">index</span><span class="p">}</span>
+      <span class="o">&lt;</span><span class="nx">button</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span> <span class="na">index</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">})}</span><span class="o">&gt;</span>
+        <span class="nx">Rerender</span>
+      <span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">Child</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span>  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">Child</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Render Child'</span><span class="p">);</span>
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span> <span class="nx">Child</span> <span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span><span class="p">}</span>
+</code></pre></div></div>
+<p><a href="https://codepen.io/dzhiriki/pen/LRBQXE?editors=0010">CodePen</a></p>
+
+<p>В примере выше мы по нажатию на кнопку вызываем setState у компонента Parent, но если посмотреть в консоль, то можно увидеть, что Child тоже перерендеривается. Более того, если мы заменим обработчик на <code class="highlighter-rouge">() =&gt; this.setState({ index: this.state.index })</code> или даже <code class="highlighter-rouge">() =&gt; this.setState({})</code>, то у нас всё равно будут перерендериваться оба компонента. Причина в том, что Реакт из коробки никак не проверяет изменение стейта или пропсов компонета. Все проверки, что делает React — это сравнение результата рендера. Таким образом, если у вас большое приложение, и вы вызываете setState у корневого компонента, у вас всё приложение целиком будет перерендерено. Реакт построит VDOM для всего приложения, сравнит его с предыдущим результатов и в DOM поместит те самые незначительные правки (если они даже были). Всё это приведет к значительным потерям в производительности приложения.</p>
+
+<h2 id="shouldcomponentupdate">shouldComponentUpdate</h2>
+<p>Для решения этой проблемы в компонентах есть метод <code class="highlighter-rouge">shouldComponentUpdate</code>. Он вызывается перед каждым потенциальным рендером, и в него аргументами приходят nextProps и nextState. Если этот метод возвращает false, то у компонента (а значит, и у всех дочерних) не вызывается рендер, Реакт не строит дерево и не делает глубокое сравнение по всему этому дереву. Гораздо меньше работы.</p>
+
+<p>Правда, нужно учитывать, что <code class="highlighter-rouge">shouldComponentUpdate</code> должен отрабатывать быстро. Если трудозатраты будут сравнимы с трудозатратами по сравнению VDOM, то от <code class="highlighter-rouge">shouldComponentUpdate</code> будет лишь вред, а не польза. Самое быстрое сравненение — это сравнение через <code class="highlighter-rouge">===</code>, с которым можно пройти по всем ключам стейта \ пропсов и проверить каждое значение. Вопрос в том, будет ли оно давать верный результат? С типами данных, которые сравниваются по значению (числа, строки, булевые значения) проблемы нет, проверка всегда будет корректная. Проблема возникает, когда в стейте есть ссылочные типы. Если мутировать объект, то нет никакой возможности проверить, изменилось ли значение, так как объект в текущем и новом стейте будет ссылаться на один и тот же объект. Пример:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="na">prop1</span><span class="p">:</span> <span class="mi">1</span><span class="p">};</span>
+<span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">a</span><span class="p">;</span>
+<span class="nx">b</span><span class="p">.</span><span class="nx">prop2</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span> <span class="o">===</span> <span class="nx">b</span><span class="p">)</span> <span class="c1">// true</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">prop2</span><span class="p">)</span> <span class="c1">// 2</span>
+</code></pre></div></div>
+
+<p>В контексте Реакта это изменения стейта таким образом:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Объект</span>
+<span class="kd">const</span> <span class="nx">newValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">object</span><span class="p">;</span>
+<span class="nx">newValue</span><span class="p">.</span><span class="nx">prop</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span>
+  <span class="na">object</span><span class="p">:</span> <span class="nx">newValue</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="c1">// Массив</span>
+<span class="kd">const</span> <span class="nx">newValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">array</span><span class="p">;</span>
+<span class="nx">newValue</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span>
+  <span class="na">array</span><span class="p">:</span> <span class="nx">newValue</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div></div>
+<p>Таким образом, сравнение через <code class="highlighter-rouge">===</code> будет давать ложноотрицательный результат: компонент не будет перерендериваться, хотя данные в действительности поменялись.</p>
+
+<p>Бывает и обратная ситуация. Когда мы каждый раз создаем ссылочный тип данных, даже если данные в нем не поменялись.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">currentRange</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">range</span> <span class="c1">// Допустим, [5, 10]</span>
+<span class="kd">const</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">currentRange</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+
+<span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span>
+  <span class="na">range</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="nx">max</span><span class="p">]</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>Получается, что у нас каждый раз создается новый массив, новая ссылка. И сравнение через <code class="highlighter-rouge">===</code> будет всегда возвращать false и компонент будет перерендериваться, хотя не должен.</p>
+
+<p>В итоге мы получаем два принципа:</p>
+
+<ul>
+  <li>Каждый раз, когда меняются данные, должна создаваться новая ссылка.</li>
+  <li>Новая ссылка должна создаваться только тогда, когда меняются данные.</li>
+</ul>
+
+<p>Первый принцип достигается достаточно просто: либо заменяем все мутабельные операции на аналогичные иммутабельные операции, либо создаем новую ссылку и затем уже её мутируем. Пример:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Создаем новый объект, сразу задавая свойство</span>
+<span class="kd">const</span> <span class="nx">newValue</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="p">...</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">object</span><span class="p">,</span>
+  <span class="na">prop</span><span class="p">:</span> <span class="mi">7</span>
+<span class="p">};</span>
+
+<span class="c1">// Аналогично примеру выше, но без использования spread-оператора</span>
+<span class="c1">// Обратите внимание, что первым аргументом передается пустой объект</span>
+<span class="kd">const</span> <span class="nx">newValue</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({},</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">object</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">prop</span><span class="p">:</span> <span class="mi">7</span>
+<span class="p">});</span>
+
+<span class="c1">// Или просто создаем новый объект, который потом мутируем</span>
+<span class="kd">const</span> <span class="nx">newValue</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">object</span> <span class="p">};</span>
+<span class="nx">newValue</span><span class="p">.</span><span class="nx">prop</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Аналогично и для массива:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Создаем новый массив через map</span>
+<span class="kd">const</span> <span class="nx">newValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">array</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">item</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">index</span> <span class="o">===</span> <span class="mi">1</span> <span class="p">?</span> <span class="mi">7</span> <span class="p">:</span> <span class="nx">item</span><span class="p">);</span>
+<span class="c1">// Создаем массив, который мутируем</span>
+<span class="kd">const</span> <span class="nx">newValue</span> <span class="o">=</span> <span class="p">[...</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">array</span><span class="p">];</span>
+<span class="nx">newValue</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+</code></pre></div></div>
+<p>Также хорошим вариантом является <a href="http://blog.csssr.ru/2016/07/08/lenses/">использование линз</a>.</p>
+
+<p>Со вторым принципом всё несколько сложнее. Обратите внимание, что в примерах выше, если текущее значение <em>уже</em> равняется 7, то всё равно будет создана новая ссылка. Поэтому необходимо проверять, точно ли меняются данные и нужна ли нам новая ссылка:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">object</span><span class="p">.</span><span class="nx">prop</span> <span class="o">!==</span> <span class="mi">7</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">newValue</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">...</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">object</span><span class="p">,</span>
+    <span class="na">prop</span><span class="p">:</span> <span class="mi">7</span>
+  <span class="p">};</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span>
+    <span class="na">array</span><span class="p">:</span> <span class="nx">newValue</span><span class="p">,</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>При этом бывают и более сложные ситуации. Представьте, что вам в компонент приходит массив чисел, а в компоненте рендерится другой компонент, куда нужно передать удвоенные числа. Тут уже проверка на правда ли изменились данные не поможет. Плохая реализация компонента будет выглядеть примерно так:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Square</span> <span class="kd">extends</span> <span class="nx">PureComponent</span> <span class="p">{</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">array</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">array</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">item</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">Child</span> <span class="nx">array</span><span class="o">=</span><span class="p">{</span><span class="nx">array</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span>  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Проблема заключается в том, что map каждый раз возвращает новый массив, хотя значение в пропсах не изменилось (та же самая ссылка).
+Более правильный вариант:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Square</span> <span class="kd">extends</span> <span class="nx">PureComponent</span> <span class="p">{</span>
+  <span class="nx">componentWillMount</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setArray</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">array</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">componentWillReceiveProps</span><span class="p">(</span><span class="nx">nextProps</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">nextProps</span><span class="p">.</span><span class="nx">array</span> <span class="o">!==</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">array</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">setArray</span><span class="p">(</span><span class="nx">nextProps</span><span class="p">.</span><span class="nx">array</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">setArray</span><span class="p">(</span><span class="nx">array</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span>
+      <span class="na">array</span><span class="p">:</span> <span class="nx">array</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">item</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">Child</span> <span class="nx">array</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">array</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span>  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>В данном случае мы храним вычисленный массив в стейте и меняем его только тогда, когда в пропсах изменилось значение, но в таком варианте мы получаем гораздо больше кода, вынуждены хранить в стейте вычислимое значение (что является антипаттерном), и нам необходимо вручную отлавливать, когда данные изменились. Если множитель будет также приходит из пропсов, то проверять нужно будет уже 2 пропса.</p>
+
+<p>Наилучшим решением будет использование мемоизации. Функция на одни и те же аргументы будет возвращать тот же самый результат (из кеша), а не вычислять его заново. Основное предназначение мемоизации — для функций, внутри которых происходят сложные вычисления. В нашем же случае важен тот момент, что так как значение берется из кеша, то возвращается <em>та же самая ссылка</em>. И так как у нас все данные иммутабельны, то нужна мемоизация, которая будет проверять значения по ссылке, а не глубоким сравнением (как, например, поступает <a href="http://ramdajs.com/docs/#memoize">R.memoize</a>, поэтому я не рекомендую её использовать, лично я сейчас пользуюсь <a href="https://www.npmjs.com/package/memoizee">memoizee</a>.</p>
+
+<p>С мемоизацией мы получим следующее:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">getArray</span> <span class="o">=</span> <span class="nx">memoizee</span><span class="p">(</span><span class="nx">array</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">item</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+
+<span class="kd">class</span> <span class="nx">Square</span> <span class="kd">extends</span> <span class="nx">PureComponent</span> <span class="p">{</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">array</span> <span class="o">=</span> <span class="nx">getArray</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">array</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">Child</span> <span class="nx">array</span><span class="o">=</span><span class="p">{</span><span class="nx">array</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span>  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>При каждом рендере мы как бы вычисляем новое значение. Но если пропс не изменился, мы получим ту же самую ссылку. Как только пропс изменится, кеша не будет, и мы при первом рендере нового массива получим новый массив, а затем снова будем брать значение из кеша.</p>
+
+<p>Также многие забывают, что использование стрелочных функций, bind и литералов массивом \ объектов в рендере создает новую ссылку при каждом рендере:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">Child</span>
+  <span class="nx">onMouseDown</span><span class="o">=</span><span class="p">{(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">handleMouseDown</span><span class="p">(</span><span class="nx">e</span><span class="p">)}</span>
+  <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleClick</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)}</span>
+  <span class="nx">items</span><span class="o">=</span><span class="p">{[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]}</span>
+<span class="sr">/</span><span class="err">&gt;
+</span></code></pre></div></div>
+
+<p>Первые два пункта решаются использованием bind один раз в конструкторе или использованием <a href="https://babeljs.io/docs/plugins/transform-class-properties/">свойств класса</a>. Третий — выносом литералов за пределы рендера.</p>
+
+<p>Таким образом, мы получили, что при правильной работе с данными мы можем сравнивать стейт и пропсы через <code class="highlighter-rouge">===</code> и получать корректный результат.</p>
+
+<p>Сама проверка реализуется следующим образом:</p>
+
+<ul>
+  <li>В версии 15.3.0 появился PureComponent, который содержит такую проверку;</li>
+  <li>Для ES6-классов есть <a href="https://www.npmjs.com/package/pure-render-decorator">pure-render-decorator</a> или <a href="https://github.com/gaearon/react-pure-render">react-pure-render</a>;</li>
+  <li>Для ES5-классов — <a href="https://facebook.github.io/react/docs/pure-render-mixin.html">PureRenderMixin</a>;</li>
+  <li>Для функциональных компонентов такой проверки нет, но в <a href="https://github.com/acdlite/recompose">recompose</a> есть метод pure, который оборачивает функциональный компонент в класс и добавляет такую проверку.</li>
+</ul>
+
+<h2 id="immutablejs">ImmutableJS</h2>
+<p>Я специально не касался в этой статье ImmutableJS, чтобы было понятно, что иммутабельность — это принцип, а не библиотека.
+ImmutableJS не позволит мутировать значения переменных и позволит избежать проверок на то, изменилось ли значение и нужно ли создавать новую ссылку:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">list1</span> <span class="o">=</span> <span class="nx">Immutable</span><span class="p">.</span><span class="nx">List</span><span class="p">([</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="p">]);</span>
+<span class="kd">const</span> <span class="nx">list2</span> <span class="o">=</span> <span class="nx">list1</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">list1</span> <span class="o">===</span> <span class="nx">list2</span><span class="p">);</span> <span class="c1">// true, задали такое же значени</span>
+<span class="kd">const</span> <span class="nx">map1</span> <span class="o">=</span> <span class="nx">Immutable</span><span class="p">.</span><span class="nb">Map</span><span class="p">({</span><span class="na">a</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="na">b</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="na">c</span><span class="p">:</span><span class="mi">3</span><span class="p">});</span>
+<span class="kd">const</span> <span class="nx">map2</span> <span class="o">=</span> <span class="nx">map1</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="s1">'b'</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">map1</span> <span class="o">===</span> <span class="nx">map2</span><span class="p">);</span> <span class="c1">// true, задали такое же значени</span>
+</code></pre></div></div>
+
+<p>ImmutableJS не поможет в тех местах, где нужна мемоизация данных, за этим попрежнему придется следить самому. К тому же ImmutableJS вводит еще один слой абстракции над данными. Стоит ли его использовать, решать вам.</p>
+
+<h2 id="заключение">Заключение</h2>
+<p>Средние и крупные проекты без использования shouldComponentUpdate будут очень медленными, поэтому использование этого метода обязательно для практически любого проекта. Наибыстрейшая проверка — это сравнение по ссылке, которое будет давать корректный результат только при соблюдении определенных правил. Иммутабельное изменение данных хоть и медленнее, чем мутации, но благодаря быстрой проверке и избавлению от лишних перерендеров, использовать однозначно стоит.</p>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter25896539 = new Ya.Metrika({id:25896539,
+						webvisor:true,
+						clickmap:true,
+						trackLinks:true,
+						accurateTrackBounce:true});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/25896539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</body>
+</html>
