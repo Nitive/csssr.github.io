@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Группы в Slack &#8211; CSSSR</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Лайфхаки о способах обращения сразу к нескольким пользователям в Slack">
+	<meta name="author" content="CSSSR">
+	<meta name="keywords" content="post">
+	<link rel="canonical" href="/2016/02/18/slack-groups">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/css/main.css" type="text/css">
+
+	<!-- Open Graph -->
+	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Группы в Slack">
+	<meta property="og:description" content="Лайфхаки о способах обращения сразу к нескольким пользователям в Slack">
+	<meta property="og:url" content="/2016/02/18/slack-groups">
+	<meta property="og:site_name" content="CSSSR">
+	
+
+	<!-- Icons -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<link sizes="57x57" href="/apple-touch-icon-57x57.png" rel="apple-touch-icon">
+	<link sizes="114x114" href="/apple-touch-icon-114x114.png" rel="apple-touch-icon">
+	<link sizes="72x72" href="/apple-touch-icon-72x72.png" rel="apple-touch-icon">
+	<link sizes="144x144" href="/apple-touch-icon-144x144.png" rel="apple-touch-icon">
+	<link sizes="60x60" href="/apple-touch-icon-60x60.png" rel="apple-touch-icon">
+	<link sizes="120x120" href="/apple-touch-icon-120x120.png" rel="apple-touch-icon">
+	<link sizes="76x76" href="/apple-touch-icon-76x76.png" rel="apple-touch-icon">
+	<link sizes="152x152" href="/apple-touch-icon-152x152.png" rel="apple-touch-icon">
+	<link sizes="180x180" href="/apple-touch-icon-180x180.png" rel="apple-touch-icon">
+	<link sizes="192x192" href="/favicon-192x192.png" rel="icon" type="image/png">
+	<link sizes="160x160" href="/favicon-160x160.png" rel="icon" type="image/png">
+	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
+	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
+	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
+	<meta name="application-name" content="Группы в Slack">
+	<meta name="msapplication-tooltip" content="Лайфхаки о способах обращения сразу к нескольким пользователям в Slack">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/mstile-large.png">
+	<meta name="msapplication-starturl" content="/2016/02/18/slack-groups">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
+	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
+	<meta name="msapplication-wide310x150logo" content="/mstile-wide.png">
+	<meta name="msapplication-square310x310logo" content="/mstile-large.png">
+</head>
+
+<body class="">
+	<div class="site-wrap">
+		<header class="site-header px2 px-responsive">
+	<div class="wrap">
+		<nav class="header measure">
+			<a href="/" class="site-title" aria-label="CSSSR"></a>
+			<div class="header-links">
+				<a href="/" class="header-link ">Посты</a>
+				<a href="/cgc" class="header-link ">CGC</a>
+			</div>
+			
+				<div class="social-icons">
+	<div class="left">
+		
+			<a class="icon icon_github" href="https://github.com/CSSSR" aria-label="GitHub"></a>
+		
+		<a class="icon icon_rss" href="/feed.xml" aria-label="RSS"></a>
+		
+			<a class="icon icon_twitter" href="https://twitter.com/csssr_dev" aria-label="Twitter"></a>
+		
+		
+			<a class="icon icon_envelope" href="mailto:hr@csssr.io" aria-label="Напишите нам"></a>
+		
+	</div>
+</div>
+
+			
+		</nav>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+
+		<div class="post p2 p-responsive wrap" role="main">
+			<div class="measure">
+				
+
+
+<div class="post-header mb2">
+	<h1>Группы в Slack</h1>
+	<span class="post-meta">
+		Feb 18, 2016
+		
+	</span><br>
+	
+	<span class="post-meta small">3 minute read</span>
+</div>
+
+<article class="post-content">
+	<p><img src="/images/slack-groups/slack.png" alt="image" /></p>
+
+<p>В <a href="https://slack.com/">Slack</a>, как и в любом другом чатике, есть удобная возможность обратиться к кому-либо через <code class="highlighter-rouge">@user</code> по имени или нику. Для всех ник становится ссылкой и при клике открывается меню для это пользователя. А самому пользователю ник подсвечивается и автоматически отправляется уведомление.</p>
+
+<p>Но что, если нужно обратиться сразу к нескольким пользователям? Есть несколько способов это сделать.</p>
+
+<h2 id="первый-способ-переход-на-платный-slack">Первый способ: переход на <a href="https://slack.com/pricing">платный Slack</a></h2>
+
+<h3 id="плюсы-платного-slack">Плюсы платного Slack</h3>
+
+<ul>
+  <li>Есть встроенная возможность разделение на группы.</li>
+  <li>Неограниченные интеграции.</li>
+  <li>Неограниченный файловый хостинг.</li>
+  <li>Неограниченная история сообщений и поиск по ним.</li>
+  <li>Подробная статистика.</li>
+  <li>Доступ гостям.</li>
+  <li>И прочее.</li>
+</ul>
+
+<h3 id="минусы-платного-slack">Минусы платного Slack</h3>
+
+<p>Не смотря на большое количество плюсов, для платной версии есть и минусы:</p>
+
+<ul>
+  <li>Дорого. Минимальный тарифный план - $6.67 за человека в первый месяц и $8 - в последующие.</li>
+  <li>Кастомизируемость интерфейса не предусмотрена, кроме цветовой схемы.</li>
+  <li>Нет встроенных видеозвонков (скоро появится).</li>
+</ul>
+
+<h2 id="второй-способ-имитация-групп-через-подсвечивание-слов">Второй способ: имитация групп через подсвечивание слов</h2>
+
+<p>Для этого в <a href="https://slack.com/account/notifications#highlight_words_div">настройках уведомлений</a> в поле Highlight words можно перечислить через запятую все необходимые группы.</p>
+
+<p><img src="/images/slack-groups/slack-highlight-words.png" alt="Highlight Words" /></p>
+
+<p>Чтобы узнать, какие группы существуют или добавить новую, можно использовать <a href="https://slack.com/customize/slackbot">встроенного бота</a>, добавив ключевые слова, чтобы он на них реагировал и постил справку об этом.</p>
+
+<p><img src="/images/slack-groups/slack-slackbot-responses.png" alt="Slackbot" /></p>
+
+<p>Ответ от бота для <code class="highlighter-rouge">-groups</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Type `@` with one of these groups: `manager`, `react`, `js`. Example: `@example`. It will send notifications automatically when you add necessary groups in Highlight Words: https://slack.com/account/notifications#highlight_words_div
+</code></pre></div></div>
+
+<p>Ответ от бота для <code class="highlighter-rouge">-channels</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Type `#` with one of channels in Slack. Example: `#example`. It will send notifications automatically when you add necessary channels in Highlight Words: https://slack.com/account/notifications#highlight_words_div
+</code></pre></div></div>
+
+<p>Так бот отвечает в чате.</p>
+
+<p><img src="/images/slack-groups/slack-chat-messages.png" alt="Groups" /></p>
+
+<h3 id="различие-групп">Различие групп</h3>
+
+<p>Группа, начинающаяся с:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">@</code> - независимая группа, выглядит как обычный текст, но может быть и ссылкой, если уже занят чьим-то никнеймом.</li>
+  <li><code class="highlighter-rouge">#</code> - группа с людьми из этого канала, становится ссылкой на канал, обычно используется для обращения в других каналах.</li>
+</ul>
+
+<h3 id="плюсы-от-подсвечивания-слов">Плюсы от подсвечивания слов</h3>
+
+<ul>
+  <li>Бесплатно.</li>
+  <li>Можно разделять на группы пользователей из каналов.</li>
+</ul>
+
+<h3 id="минусы-от-подсвечивания-слов">Минусы от подсвечивания слов</h3>
+
+<ul>
+  <li>Необходимо каждому пользователю самому прописывать все нужные группы.</li>
+</ul>
+
+<h2 id="третий-способ-делегирование-всей-рутины-боту">Третий способ: делегирование всей рутины боту</h2>
+
+<p>Если чего-то не хватает в бесплатном Slack, на помощь приходит бот.</p>
+
+<p>Группы можно хранить любым удобным способом, например, в конфиге или, если нужно добавлять из чата через команды, то в базе данных.</p>
+
+<p>При обращении к определённой группе, если такая есть в словаре, бот ищет её в описании профиля всех пользователей и постит сообщение со списком ников, и всем этим пользователям приходит уведомление уже на уровне самого слака.</p>
+
+<h3 id="плюсы-бота">Плюсы бота</h3>
+
+<ul>
+  <li>Бесплатно. Можно реализовывать платные фичи.</li>
+  <li>Расширенная кастомизируемость сообщений.</li>
+  <li>Можно реализовать любые фичи и даже помощнее.</li>
+</ul>
+
+<h3 id="минусы-бота">Минусы бота</h3>
+
+<ul>
+  <li>Необходимо написать бота (даже с использованием готовых решений).</li>
+  <li>Заспамляет чат промежуточными сообщениями. Можно, конечно, удалять сообщение сразу же, но это будет только раздражать.</li>
+  <li>Зависит от содержимого описания профиля с ограниченной длиной в 249 символов.</li>
+</ul>
+
+<h2 id="заключение">Заключение</h2>
+
+<p>Когда в Slack пользователей становится много, приходит необходимость разделенения на группы для тех, кто более компетентен и узко специлизируется в какой-либо области. Фичи из платного Slack всегда можно реализовать альтернативными способами: как через встроенные возможности, так и через бота.</p>
+
+<h2 id="опрос-на-geektimes">Опрос на Geektimes</h2>
+
+<p><img src="/images/slack-groups/slack-groups-poll.png" alt="Опрос на Geektimes" /></p>
+
+<p><a href="https://geektimes.ru/post/271292/">Оригинальный пост на Geektimes</a>.</p>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter25896539 = new Ya.Metrika({id:25896539,
+						webvisor:true,
+						clickmap:true,
+						trackLinks:true,
+						accurateTrackBounce:true});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/25896539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</body>
+</html>

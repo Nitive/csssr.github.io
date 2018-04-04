@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Использование линз на реальных примерах &#8211; CSSSR</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Учимся преодолевать сложности в работе с иммутабельными данными при помощи концепции линз">
+	<meta name="author" content="CSSSR">
+	<meta name="keywords" content="post">
+	<link rel="canonical" href="/2016/07/08/lenses">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/css/main.css" type="text/css">
+
+	<!-- Open Graph -->
+	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Использование линз на реальных примерах">
+	<meta property="og:description" content="Учимся преодолевать сложности в работе с иммутабельными данными при помощи концепции линз">
+	<meta property="og:url" content="/2016/07/08/lenses">
+	<meta property="og:site_name" content="CSSSR">
+	
+
+	<!-- Icons -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<link sizes="57x57" href="/apple-touch-icon-57x57.png" rel="apple-touch-icon">
+	<link sizes="114x114" href="/apple-touch-icon-114x114.png" rel="apple-touch-icon">
+	<link sizes="72x72" href="/apple-touch-icon-72x72.png" rel="apple-touch-icon">
+	<link sizes="144x144" href="/apple-touch-icon-144x144.png" rel="apple-touch-icon">
+	<link sizes="60x60" href="/apple-touch-icon-60x60.png" rel="apple-touch-icon">
+	<link sizes="120x120" href="/apple-touch-icon-120x120.png" rel="apple-touch-icon">
+	<link sizes="76x76" href="/apple-touch-icon-76x76.png" rel="apple-touch-icon">
+	<link sizes="152x152" href="/apple-touch-icon-152x152.png" rel="apple-touch-icon">
+	<link sizes="180x180" href="/apple-touch-icon-180x180.png" rel="apple-touch-icon">
+	<link sizes="192x192" href="/favicon-192x192.png" rel="icon" type="image/png">
+	<link sizes="160x160" href="/favicon-160x160.png" rel="icon" type="image/png">
+	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
+	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
+	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
+	<meta name="application-name" content="Использование линз на реальных примерах">
+	<meta name="msapplication-tooltip" content="Учимся преодолевать сложности в работе с иммутабельными данными при помощи концепции линз">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/mstile-large.png">
+	<meta name="msapplication-starturl" content="/2016/07/08/lenses">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
+	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
+	<meta name="msapplication-wide310x150logo" content="/mstile-wide.png">
+	<meta name="msapplication-square310x310logo" content="/mstile-large.png">
+</head>
+
+<body class="">
+	<div class="site-wrap">
+		<header class="site-header px2 px-responsive">
+	<div class="wrap">
+		<nav class="header measure">
+			<a href="/" class="site-title" aria-label="CSSSR"></a>
+			<div class="header-links">
+				<a href="/" class="header-link ">Посты</a>
+				<a href="/cgc" class="header-link ">CGC</a>
+			</div>
+			
+				<div class="social-icons">
+	<div class="left">
+		
+			<a class="icon icon_github" href="https://github.com/CSSSR" aria-label="GitHub"></a>
+		
+		<a class="icon icon_rss" href="/feed.xml" aria-label="RSS"></a>
+		
+			<a class="icon icon_twitter" href="https://twitter.com/csssr_dev" aria-label="Twitter"></a>
+		
+		
+			<a class="icon icon_envelope" href="mailto:hr@csssr.io" aria-label="Напишите нам"></a>
+		
+	</div>
+</div>
+
+			
+		</nav>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+
+		<div class="post p2 p-responsive wrap" role="main">
+			<div class="measure">
+				
+
+
+<div class="post-header mb2">
+	<h1>Использование линз на реальных примерах</h1>
+	<span class="post-meta">
+		Jul 8, 2016
+		
+			by <a target="_blank" class="post-author" rel="author" href="https://twitter.com/bracketsarrows">bracketsarrows</a>
+		
+	</span><br>
+	
+	<span class="post-meta small">18 minute read</span>
+</div>
+
+<article class="post-content">
+	<p>Всем привет! Меня зовут Андрей, и я Javascript-разработчик команды «Восход». В своей работе мне часто приходится иметь дело с иммутабельными данными, имеющими сложную иерархическую структуру, и использование стандартных средств для этого мне показалось довольно неудобным. В итоге в поисках лучшего решения я пришел к такой интересной концепции как линзы.</p>
+
+<h3 id="про-иммутабельные-данные">Про иммутабельные данные</h3>
+
+<p>Иммутабельные данные последнее время переживают всплеск популярности во фронтенде; отправной точкой можно считать <a href="http://swannodette.github.io/2013/12/17/the-future-of-javascript-mvcs" target="_blank">эту статью</a>. Основной причиной всплеска является проблема «определения изменений» (change detection), которую так или иначе пытается решать любой Javascript-фреймворк или инфраструктура. Тотальное использование иммутабельных данных — это один из способов её решения; в частности оно является основным в <a href="https://github.com/facebook/immutable-js/#the-case-for-immutability" target="_blank">ReactJS сообществе</a>.</p>
+
+<p>Однако, при попытке использовать иммутабельные данные появляется проблема с «глубокими» изменениями во вложенных структурах. Предлагаю разобраться на реальных примерах, в чем же проблема и можем ли мы как-то её решить.</p>
+
+<h2 id="пример-попроще">Пример попроще</h2>
+
+<h3 id="иммутабельная-vs-мутабельная-структура">Иммутабельная vs мутабельная структура</h3>
+
+<p>Вот пример очень простой функции для иммутабельного изменения несложной структуры:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">setProps</span> <span class="o">=</span> <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
+    <span class="p">...</span><span class="nx">state</span><span class="p">,</span>
+    <span class="na">rangeSlider</span><span class="p">:</span> <span class="p">{</span>
+        <span class="p">...</span><span class="nx">state</span><span class="p">.</span><span class="nx">rangeSlider</span><span class="p">,</span>
+        <span class="p">...</span><span class="nx">pick</span><span class="p">([</span><span class="s1">'from'</span><span class="p">,</span> <span class="s1">'to'</span><span class="p">,</span> <span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">],</span> <span class="nx">action</span><span class="p">.</span><span class="nx">payload</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>Довольно многословно, не правда ли? К тому же, в определении два раза повторяется <code class="highlighter-rouge">state</code> и <code class="highlighter-rouge">rangeSlider</code>, что противоречит хорошей практике.</p>
+
+<p>Даже на этом простом примере видно, в чем проблема иммутабельных изменений. Чтобы установить значение вглубь структуры, нам надо сначала полностью её разобрать, а потом собрать по новой с новыми значениеми. Поэтому и получается очень-очень многословно.</p>
+
+<p>Сравните запись выше и обычное мутабельное присваивание:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span>
+    <span class="nx">state</span><span class="p">.</span><span class="nx">rangeSlider</span><span class="p">,</span>
+    <span class="nx">pick</span><span class="p">([</span><span class="s1">'from'</span><span class="p">,</span> <span class="s1">'to'</span><span class="p">,</span> <span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">],</span> <span class="nx">action</span><span class="p">.</span><span class="nx">payload</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div></div>
+<p>То есть, переходя от мутабельных структур к иммутабельным, мы теряем в лаконичности и читабельности кода. Естественно, функциональное сообщество не могло этого допустить, и в нем родилась такая концепция, как линзы.</p>
+
+<h3 id="что-такое-линза">Что такое линза</h3>
+
+<p>Чтобы иммутабельно установить значение, необходимо знать, как его прочитать (как до него добратся). Следовательно, разумным решением будет хранить функции для чтения и установки значения вместе, в одной сущности, которую и назвали линзой.</p>
+
+<p>Таким образом линза состоит из:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">getter</code> — функции для получения значения;</li>
+  <li><code class="highlighter-rouge">setter</code> — функции для установки значения, которая обязательно должна быть чистой и выполнять установку иммутабельно.</li>
+</ul>
+
+<h3 id="создание-линзы">Создание линзы</h3>
+
+<p>Для создания линз мы будем использовать функцию <code class="highlighter-rouge">lens</code> из библиотеки <a href="http://ramdajs.com/0.21.0/docs/#lens" target="_blank">ramda</a>. Первый её аргумент — <code class="highlighter-rouge">getter</code>, второй — <code class="highlighter-rouge">setter</code>. Простой пример — определение линзы <code class="highlighter-rouge">lensProp</code> для аттрибута обьекта:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensProp</span> <span class="o">=</span> <span class="nx">prop</span> <span class="o">=&gt;</span> <span class="nx">lens</span><span class="p">(</span>
+    <span class="c1">// getter - получаем свойство</span>
+    <span class="nx">obj</span> <span class="o">=&gt;</span> <span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span>
+    <span class="c1">// setter - ставим свойство иммутабельно</span>
+    <span class="p">(</span><span class="nx">newVal</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({...</span><span class="nx">obj</span><span class="p">,</span> <span class="p">[</span><span class="nx">prop</span><span class="p">]:</span> <span class="nx">newVal</span><span class="p">})</span>
+<span class="p">)</span>
+</code></pre></div></div>
+<h3 id="использование-линзы">Использование линзы</h3>
+
+<p>Есть две главные и одна интересная операции:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">view</code> — получить данные по линзе, где первый аргумент линза, а второй — структура, из которой надо получить данные:</li>
+</ul>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="na">key</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="nx">val</span> <span class="o">=</span> <span class="nx">view</span><span class="p">(</span><span class="nx">lensProp</span><span class="p">(</span><span class="s1">'key'</span><span class="p">),</span> <span class="nx">a</span><span class="p">)</span> <span class="c1">// val - 2</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">set</code> — установить данные по линзе, где первый аргумент линза, второй — значение, которое надо установить, а третий — данные, куда установить значение:</li>
+</ul>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="na">key</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="nx">newA</span> <span class="o">=</span> <span class="kd">set</span><span class="p">(</span><span class="nx">lensProp</span><span class="p">(</span><span class="s1">'key'</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span> <span class="c1">// newA - {key: 4}</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">over</code> — операция, которая вытаскивает через <code class="highlighter-rouge">view</code> по линзе значение, применяет к нему некотoрую функцию и устанавливает его обратно:</li>
+</ul>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">over</span> <span class="o">=</span> <span class="p">(</span><span class="nx">someLens</span><span class="p">,</span> <span class="nx">func</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">view</span><span class="p">(</span><span class="nx">someLens</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span>
+    <span class="kd">const</span> <span class="nx">newVal</span> <span class="o">=</span> <span class="nx">func</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kd">set</span><span class="p">(</span><span class="nx">someLens</span><span class="p">,</span> <span class="nx">newVal</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="тренировка">Тренировка</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="na">key</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="nx">changedA</span> <span class="o">=</span> <span class="nx">over</span><span class="p">(</span><span class="nx">lensProp</span><span class="p">(</span><span class="s1">'key'</span><span class="p">),</span> <span class="nx">val</span> <span class="o">=&gt;</span> <span class="nx">val</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span> <span class="c1">// changedA - {key: 3}</span>
+</code></pre></div></div>
+
+<p>Вроде всё есть, теперь вернемся к примеру. Напишем наше преобразование, используя <code class="highlighter-rouge">lensProp</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">setProps</span> <span class="o">=</span> <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">over</span><span class="p">(</span>
+    <span class="nx">lensProp</span><span class="p">(</span><span class="s1">'rangeSlider'</span><span class="p">),</span>
+    <span class="nx">slider</span> <span class="o">=&gt;</span> <span class="p">({...</span><span class="nx">slider</span><span class="p">,</span> <span class="p">...</span><span class="nx">pick</span><span class="p">([</span><span class="s1">'from'</span><span class="p">,</span> <span class="s1">'to'</span><span class="p">,</span> <span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">],</span> <span class="nx">action</span><span class="p">.</span><span class="nx">payload</span><span class="p">)}),</span>
+    <span class="nx">state</span>
+<span class="p">)</span>
+</code></pre></div></div>
+<p>Получается чуть-чуть лаконичнее и, что очень важно, без каких-либо повторений: нет дублирования имени аттрибута обьекта(<code class="highlighter-rouge">rangeSlider</code>). Это просто следствие главного свойства линз — композируемости. Линзы — это пример отлично композируемой абстракции.</p>
+
+<p>Давайте теперь сделаем линзу для работы с аттрибутом <code class="highlighter-rouge">from</code> у <code class="highlighter-rouge">rangeSlider</code>. Вынесем линзу для работы с <code class="highlighter-rouge">rangeSlider</code> в переменную:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensRangeSlider</span> <span class="o">=</span> <span class="nx">lensProp</span><span class="p">(</span><span class="s1">'rangeSlider'</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Можно определить линзу для работы с аттрибутом <code class="highlighter-rouge">from</code> у любого обьекта, используя все тот же <code class="highlighter-rouge">lensProp</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensFrom</span> <span class="o">=</span> <span class="nx">lensProp</span><span class="p">(</span><span class="s1">'from'</span><span class="p">)</span>
+</code></pre></div></div>
+<p>А теперь чудеса композиции! Чтобы получить линзу для <code class="highlighter-rouge">from</code> у <code class="highlighter-rouge">rangeSlider</code>, нужно просто скомпозировать две уже опеределенныe нами линзы:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensRangeSliderFrom</span> <span class="o">=</span> <span class="nx">compose</span><span class="p">(</span>
+    <span class="nx">lensRangeSlider</span><span class="p">,</span>
+    <span class="nx">lensFrom</span>
+<span class="p">)</span>
+</code></pre></div></div>
+<p>Пробуем:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">rangeSlider</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">from</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="na">to</span><span class="p">:</span> <span class="mi">4</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">view</span><span class="p">(</span><span class="nx">lensRangeSliderFrom</span><span class="p">,</span> <span class="nx">state</span><span class="p">)</span> <span class="c1">// 3</span>
+<span class="kd">set</span><span class="p">(</span><span class="nx">lensRangeSliderFrom</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">state</span><span class="p">)</span>
+<span class="cm">/* {
+    rangeSlider: {
+        from: 5,
+        to:4
+    }
+} */</span>
+
+<span class="nx">over</span><span class="p">(</span><span class="nx">lensRangeSliderFrom</span><span class="p">,</span> <span class="nx">val</span> <span class="o">=&gt;</span> <span class="nx">val</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">state</span><span class="p">)</span>
+<span class="cm">/* {
+    rangeSlider: {
+        from: 300,
+        to:4
+    }
+} */</span>
+</code></pre></div></div>
+<p><a href="http://goo.gl/qsW5Ln" target="_blank">Последний пример в Ramda REPL</a>.</p>
+
+<p>Получилось довольно немногословно, да? На самом деле, такую линзу можно было бы определить, используя встроенную в <code class="highlighter-rouge">ramda</code> функцию <a href="http://ramdajs.com/0.21.0/docs/#lensPath" target="_blank">lensPath</a>. Получилось бы просто:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensRangeSliderFrom</span> <span class="o">=</span> <span class="nx">lensPath</span><span class="p">([</span><span class="s1">'rangeSlider'</span><span class="p">,</span> <span class="s1">'from'</span><span class="p">])</span>
+</code></pre></div></div>
+<p>Результат <a href="http://goo.gl/acC417" target="_blank">тот же самый</a>.</p>
+
+<h2 id="пример-посложнее">Пример посложнее</h2>
+
+<p>Представим, что есть вот такая структура:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">struct</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">id</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="na">description</span><span class="p">:</span> <span class="s1">'Some cool thing'</span><span class="p">,</span>
+    <span class="na">users</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="na">fio</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">name</span><span class="p">:</span> <span class="s1">'Ivan'</span>
+            <span class="p">},</span>
+            <span class="na">familyMembers</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="na">id</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                    <span class="na">role</span><span class="p">:</span> <span class="s1">'sister'</span><span class="p">,</span>
+                    <span class="na">fio</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="na">name</span><span class="p">:</span> <span class="s1">'Olga'</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Существует некотoрый обьект, в котором есть юзеры с данными, а у юзеров — члены семьи, у которых есть свои данные. Задача — написать функцию, которая будет обновлять имя юзера по <code class="highlighter-rouge">id</code>. Давайте решим эту задачу с помощью линз.</p>
+
+<h3 id="начало-решения">Начало решения</h3>
+
+<p>Сначала нам нужно научиться работать с ключем <code class="highlighter-rouge">users</code> в объекте. Воспользуемся функцией <code class="highlighter-rouge">lensProp</code>, с которой мы познакомились ранее:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensUsers</span> <span class="o">=</span> <span class="nx">lensProp</span><span class="p">(</span><span class="s1">'users'</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Дальше нам надо как-то научиться работать с конкретным юзером, зная его <code class="highlighter-rouge">id</code>. Необходимо написать функцию, которая будет получать <code class="highlighter-rouge">id</code> юзера и возвращать линзу для этого юзера.</p>
+
+<h3 id="определение-функций-getter-и-setter">Определение функций <code class="highlighter-rouge">getter</code> и <code class="highlighter-rouge">setter</code></h3>
+
+<p>Как говорилось ранее, линза состоит из двух функций — <code class="highlighter-rouge">getter</code> и <code class="highlighter-rouge">setter</code>. Давайте определим обе:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">getter</code> должен получать на вход массив и возврашать юзера с определенным <code class="highlighter-rouge">id</code>. Напишем функцию, которая создает такую функцию для определенного <code class="highlighter-rouge">id</code>:</li>
+</ul>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">makeGetterById</span> <span class="o">=</span> <span class="nx">id</span> <span class="o">=&gt;</span> <span class="nx">array</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">item</span><span class="p">.</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">id</span><span class="p">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">setter</code> должен получать на вход нового юзера и массив и устанавливать нового юзера на место старого с определенным <code class="highlighter-rouge">id</code>:</li>
+</ul>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">makeSetterById</span> <span class="o">=</span> <span class="nx">id</span> <span class="o">=&gt;</span>
+                <span class="p">(</span><span class="nx">newItem</span><span class="p">,</span> <span class="nx">array</span><span class="p">)</span> <span class="o">=&gt;</span>
+                    <span class="nx">array</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">item</span><span class="p">.</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">id</span> <span class="p">?</span> <span class="nx">newItem</span> <span class="p">:</span> <span class="nx">item</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Теперь определим саму функцию, создающую линзу:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensById</span> <span class="o">=</span> <span class="nx">id</span> <span class="o">=&gt;</span> <span class="nx">lens</span><span class="p">(</span>
+    <span class="nx">makeGetterById</span><span class="p">(</span><span class="nx">id</span><span class="p">),</span>
+    <span class="nx">makeSetterById</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div></div>
+<p>Проверим работоспособность функции в <a href="http://goo.gl/fZr446" target="_blank">Ramda REPL</a>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">users</span> <span class="o">=</span> <span class="p">[{</span><span class="na">id</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="s1">'Ivan'</span><span class="p">},</span> <span class="p">{</span><span class="na">id</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="s1">'Oleg'</span><span class="p">}]</span>
+
+<span class="nx">view</span><span class="p">(</span><span class="nx">lensById</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nx">users</span><span class="p">)</span>
+<span class="c1">// {"id": 1, "name": "Ivan"}</span>
+<span class="kd">set</span><span class="p">(</span><span class="nx">lensById</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="p">{</span><span class="na">id</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="s1">'Olga'</span><span class="p">},</span> <span class="nx">users</span><span class="p">)</span>
+<span class="c1">// [{"id": 1, "name": "Ivan"}, {"id": 2, "name": "Olga"}]</span>
+<span class="nx">over</span><span class="p">(</span><span class="nx">lensById</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="nx">user</span> <span class="o">=&gt;</span> <span class="nx">assoc</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'Fillip'</span><span class="p">,</span> <span class="nx">user</span><span class="p">),</span> <span class="nx">users</span><span class="p">)</span>
+<span class="c1">// [{"id": 1, "name": "Ivan"}, {"id": 2, "name": "Fillip"}]</span>
+</code></pre></div></div>
+
+<h3 id="продолжение-решения">Продолжение решения</h3>
+
+<p>Работает! Продолжаем. :) Осталось определить линзы для работы с ключами <code class="highlighter-rouge">fio</code> и <code class="highlighter-rouge">name</code>. Снова воспользуемся <code class="highlighter-rouge">lensProp</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensFio</span> <span class="o">=</span> <span class="nx">lensProp</span><span class="p">(</span><span class="s1">'fio'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">lensName</span> <span class="o">=</span> <span class="nx">lensProp</span><span class="p">(</span><span class="s1">'name'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Сведём всё это вместе. Определим саму функцию, которая по <code class="highlighter-rouge">id</code> юзера будет создавать линзу для работы с его именем:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensUserNameById</span> <span class="o">=</span> <span class="nx">id</span> <span class="o">=&gt;</span> <span class="nx">compose</span><span class="p">(</span>
+    <span class="nx">lensUsers</span><span class="p">,</span>
+    <span class="nx">lensById</span><span class="p">(</span><span class="nx">id</span><span class="p">),</span>
+    <span class="nx">lensFio</span><span class="p">,</span>
+    <span class="nx">lensName</span>
+<span class="p">)</span>
+</code></pre></div></div>
+<p>Выглядит довольно декларативно. Давайте попробуем функцию в деле:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">view</span><span class="p">(</span><span class="nx">lensUserNameById</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nx">struct</span><span class="p">)</span>
+<span class="c1">// -&gt; "Ivan"</span>
+<span class="kd">set</span><span class="p">(</span><span class="nx">lensUserNameById</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">'Petr'</span><span class="p">,</span> <span class="nx">struct</span><span class="p">)</span>
+<span class="cm">/* -&gt;
+{
+    "description": "Some cool thing",
+    "id": 2,
+    "users": [
+        {
+            "familyMembers": [
+                {
+                    "fio": {
+                        "name": "Olga"
+                    },
+                    "id": 5,
+                    "role": "sister"
+                }
+            ],
+            "fio": {
+                "name": "Petr"
+            },
+            "id": 1
+        }
+    ]
+}
+*/</span>
+
+<span class="nx">over</span><span class="p">(</span><span class="nx">lensUserNameById</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nx">name</span> <span class="o">=&gt;</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">'!!!'</span><span class="p">,</span> <span class="nx">struct</span><span class="p">)</span>
+<span class="cm">/* -&gt;
+{
+    "description": "Some cool thing",
+    "id": 2,
+    "users": [
+        {
+            "familyMembers": [
+                {
+                    "fio": {
+                        "name": "Olga"
+                    },
+                    "id": 5,
+                    "role": "sister"
+                }
+            ],
+            "fio": {
+                "name": "Ivan!!!"
+            },
+            "id": 1
+        }
+    ]
+}
+*/</span>
+</code></pre></div></div>
+<p><a href="http://goo.gl/kxSPgy" target="_blank">Пример в Ramda REPL</a>.</p>
+
+<h3 id="конец-решения-и-новая-задача">Конец решения и новая задача</h3>
+
+<p>Ура! Мы справились, мы молодцы! Казалось бы, можно пойти отдыхать с чистой совестью и смотреть свежую серию любимого сериала. Но вот незадача: нам <em>внезапно</em> понадобилось уметь работать с именами членов семьи юзера.</p>
+
+<p>Давайте попробуем решить новую задачу быстрее, максимально переиспользуя уже написанное. Какие линзы нам нужны для этого?</p>
+
+<p>Для начала нам потребуется линза для работы с ключом <code class="highlighter-rouge">users</code>, но она уже у нас определена — <code class="highlighter-rouge">lensUsers</code>; потом — уже определенная линза для работы с юзером по <code class="highlighter-rouge">id</code> — <code class="highlighter-rouge">lensById</code>. Поэтому давайте создадим линзу для работы с <code class="highlighter-rouge">familyMembers</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensFamilyMembers</span> <span class="o">=</span> <span class="nx">lensProp</span><span class="p">(</span><span class="s1">'familyMembers'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Далее нам необходима линза для работы с членом семьи по <code class="highlighter-rouge">id</code>. Звучит знакомо, не правда ли? А не подойдет ли для этого ранее определенная <code class="highlighter-rouge">lensById</code>? Конечно же, подойдёт. Суть работы с членами семьи та же, что и с юзерами: ищем по <code class="highlighter-rouge">id</code> и заменяем по <code class="highlighter-rouge">id</code>.</p>
+
+<p>Далее нам нужны линзы для работы с <code class="highlighter-rouge">fio</code> и <code class="highlighter-rouge">name</code>. Они уже были определены нами — <code class="highlighter-rouge">lensFio</code> и <code class="highlighter-rouge">lensName</code> соответственно.</p>
+
+<p>Итак, у нас есть все необходимые составляющие. Давайте определим функцию, создающую нужную нам линзу:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensUserMemberFioNameById</span> <span class="o">=</span> <span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">memberId</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">compose</span><span class="p">(</span>
+    <span class="nx">lensUsers</span><span class="p">,</span>
+    <span class="nx">lensById</span><span class="p">(</span><span class="nx">userId</span><span class="p">),</span>
+    <span class="nx">lensFamilyMembers</span><span class="p">,</span>
+    <span class="nx">lensById</span><span class="p">(</span><span class="nx">memberId</span><span class="p">),</span>
+    <span class="nx">lensFio</span><span class="p">,</span>
+    <span class="nx">lensName</span>
+<span class="p">)</span>
+</code></pre></div></div>
+<p>Протестируем:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">view</span><span class="p">(</span><span class="nx">lensUserMemberFioNameById</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="nx">struct</span><span class="p">)</span>
+<span class="c1">// -&gt; "Olga"</span>
+<span class="kd">set</span><span class="p">(</span><span class="nx">lensUserMemberFioNameById</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="s1">'Tanya'</span><span class="p">,</span> <span class="nx">struct</span><span class="p">)</span>
+<span class="cm">/* -&gt;
+{
+    "description": "Some cool thing",
+    "id": 2,
+    "users": [
+        {
+            "familyMembers": [
+                {
+                    "fio": {
+                        "name": "Tanya"
+                    },
+                    "id": 5,
+                    "role": "sister"
+                }
+            ],
+            "fio": {
+                "name": "Ivan"
+            },
+            "id": 1
+        }
+    ]
+}
+*/</span>
+<span class="nx">over</span><span class="p">(</span><span class="nx">lensUserMemberFioNameById</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="nx">name</span> <span class="o">=&gt;</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">'!!!'</span><span class="p">,</span> <span class="nx">struct</span><span class="p">)</span>
+<span class="cm">/* -&gt;
+{
+    "description": "Some cool thing",
+    "id": 2,
+    "users": [
+        {
+            "familyMembers": [
+                {
+                    "fio": {
+                        "name": "Olga!!!"
+                    },
+                    "id": 5,
+                    "role": "sister"
+                }
+            ],
+            "fio": {
+                "name": "Ivan"
+            },
+            "id": 1
+        }
+    ]
+}
+*/</span>
+</code></pre></div></div>
+<p>Все работает, как и ожидалось, см. пример в <a href="http://goo.gl/DBtcZa" target="_blank">Ramda REPL</a>.</p>
+
+<h3 id="усложнение-и-новая-задача">Усложнение и новая задача</h3>
+
+<p>И все хорошо, но <em>внезапно</em> нам захотелось работать с членами семьи не по <code class="highlighter-rouge">id</code>, а по роли <code class="highlighter-rouge">role</code>. Допустим, роль уникальна. Мы можем легко написать линзу для работы со значением по <code class="highlighter-rouge">role</code>.</p>
+
+<p>Определяем функцию для создания геттера:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">makeGetterByRole</span> <span class="o">=</span> <span class="nx">role</span> <span class="o">=&gt;</span> <span class="nx">array</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">item</span><span class="p">.</span><span class="nx">role</span> <span class="o">===</span> <span class="nx">role</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Определяем функцию для создания сеттера:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">makeSetterByRole</span> <span class="o">=</span> <span class="nx">role</span> <span class="o">=&gt;</span>
+                     <span class="p">(</span><span class="nx">newItem</span><span class="p">,</span> <span class="nx">array</span><span class="p">)</span> <span class="o">=&gt;</span>
+                         <span class="nx">array</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">item</span><span class="p">.</span><span class="nx">role</span> <span class="o">===</span> <span class="nx">role</span> <span class="p">?</span> <span class="nx">newItem</span> <span class="p">:</span> <span class="nx">item</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Теперь определим саму функцию, создающую линзу:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensByRole</span> <span class="o">=</span> <span class="nx">role</span> <span class="o">=&gt;</span> <span class="nx">lens</span><span class="p">(</span>
+    <span class="nx">makeGetterByRole</span><span class="p">(</span><span class="nx">role</span><span class="p">),</span>
+    <span class="nx">makeSetterByRole</span><span class="p">(</span><span class="nx">role</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="избавление-от-копипасты">Избавление от копипасты</h3>
+
+<p>Если перечитать статью заново, то можно заметить, что эта запись является почти полной копипастой определения <code class="highlighter-rouge">lensById</code>. Мы можем легко избавиться от копипасты. Давайте просто вынесем название аттрибута, по которому определяется, какой итем надо взять, в аргументы функции:</p>
+
+<p>Определяем функцию для создания геттера:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">makeGetterBy</span> <span class="o">=</span> <span class="p">(</span><span class="nx">attr</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="o">=&gt;</span>
+                                <span class="nx">array</span> <span class="o">=&gt;</span>
+                                    <span class="nx">array</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">item</span><span class="p">[</span><span class="nx">attr</span><span class="p">]</span> <span class="o">===</span> <span class="nx">val</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Определяем функцию для создания сеттера:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">makeSetterBy</span> <span class="o">=</span> <span class="p">(</span><span class="nx">attr</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="o">=&gt;</span>
+                        <span class="p">(</span><span class="nx">newItem</span><span class="p">,</span> <span class="nx">array</span><span class="p">)</span> <span class="o">=&gt;</span>
+                            <span class="nx">array</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">item</span><span class="p">[</span><span class="nx">attr</span><span class="p">]</span> <span class="o">===</span> <span class="nx">val</span> <span class="p">?</span> <span class="nx">newItem</span> <span class="p">:</span> <span class="nx">item</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Теперь определим саму функцию создающую линзу:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensBy</span> <span class="o">=</span> <span class="nx">attr</span> <span class="o">=&gt;</span> <span class="nx">val</span> <span class="o">=&gt;</span> <span class="nx">lens</span><span class="p">(</span>
+    <span class="nx">makeGetterBy</span><span class="p">(</span><span class="nx">attr</span><span class="p">,</span> <span class="nx">val</span><span class="p">),</span>
+    <span class="nx">makeSetterBy</span><span class="p">(</span><span class="nx">attr</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div></div>
+<p>При помощи нее переопределим <code class="highlighter-rouge">lensById</code> и <code class="highlighter-rouge">lensByRole</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensById</span> <span class="o">=</span> <span class="nx">lensBy</span><span class="p">(</span><span class="s1">'id'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">lensByRole</span> <span class="o">=</span> <span class="nx">lensBy</span><span class="p">(</span><span class="s1">'role'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>И теперь по аналогии с <code class="highlighter-rouge">lensUserMemberFioNameById</code> определим <code class="highlighter-rouge">lensUserMemberFioNameByRole</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensUserMemberFioNameByRole</span> <span class="o">=</span> <span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">memberRole</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">compose</span><span class="p">(</span>
+    <span class="nx">lensUsers</span><span class="p">,</span>
+    <span class="nx">lensById</span><span class="p">(</span><span class="nx">userId</span><span class="p">),</span>
+    <span class="nx">lensFamilyMembers</span><span class="p">,</span>
+    <span class="nx">lensByRole</span><span class="p">(</span><span class="nx">memberRole</span><span class="p">),</span>
+    <span class="nx">lensFio</span><span class="p">,</span>
+    <span class="nx">lensName</span>
+<span class="p">)</span>
+</code></pre></div></div>
+<p>Протестируем:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">view</span><span class="p">(</span><span class="nx">lensUserMemberFioNameByRole</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'sister'</span><span class="p">),</span> <span class="nx">struct</span><span class="p">)</span>
+<span class="kd">set</span><span class="p">(</span><span class="nx">lensUserMemberFioNameByRole</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'sister'</span><span class="p">),</span> <span class="s1">'Tanya'</span><span class="p">,</span> <span class="nx">struct</span><span class="p">)</span>
+<span class="nx">over</span><span class="p">(</span><span class="nx">lensUserMemberFioNameByRole</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'sister'</span><span class="p">),</span> <span class="nx">name</span> <span class="o">=&gt;</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">'!!!'</span><span class="p">,</span> <span class="nx">struct</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Результат будет точно такой же, как в предыдущем примере, можете <a href="http://goo.gl/WtBfvj" target="_blank">убедиться сами</a>.
+Видно, что линзы позволяют писать легко переиспользуемый и композируемый код для работы с данными с возможностью простого рефакторинга.</p>
+
+<p>Полный код примера в <a href="http://goo.gl/KloZWe" target="_blank">Ramda REPL</a>.</p>
+
+<h3 id="перепроверка">Перепроверка</h3>
+
+<p>Вспомним, что у нас получилось в первом примере:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">setProps</span> <span class="o">=</span> <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="o">=&gt;</span>  <span class="nx">over</span><span class="p">(</span>
+    <span class="nx">lensProp</span><span class="p">(</span><span class="s1">'rangeSlider'</span><span class="p">),</span>
+    <span class="nx">slider</span> <span class="o">=&gt;</span> <span class="p">({...</span><span class="nx">slider</span><span class="p">,</span> <span class="p">...</span><span class="nx">pick</span><span class="p">([</span><span class="s1">'from'</span><span class="p">,</span> <span class="s1">'to'</span><span class="p">,</span> <span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">],</span> <span class="nx">action</span><span class="p">.</span><span class="nx">payload</span><span class="p">)}),</span>
+    <span class="nx">state</span>
+<span class="p">)</span>
+</code></pre></div></div>
+<p>Мы немного схитрили и использовали <code class="highlighter-rouge">over</code>, чтобы смержить значение из <code class="highlighter-rouge">state.rangeSlider</code> со значениями из <code class="highlighter-rouge">action.payload</code>. Эту операцию также можно вынести в отдельную линзу, так как любую операцию с данными можно вынести в линзу.</p>
+
+<h2 id="домашнее-задание-или-diy">Домашнее задание или DIY</h2>
+
+<p>Попробуйте сделать это самостоятельно. Необходимо написать определение функции <code class="highlighter-rouge">lensByPick</code>, которая будет работать так:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">key</span><span class="p">:</span> <span class="s1">'value'</span><span class="p">,</span>
+    <span class="na">key1</span><span class="p">:</span> <span class="s1">'value1'</span><span class="p">,</span>
+    <span class="na">key2</span><span class="p">:</span> <span class="s1">'value2'</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nx">view</span><span class="p">(</span><span class="nx">lensByPick</span><span class="p">([</span><span class="s1">'key1'</span><span class="p">,</span> <span class="s1">'key2'</span><span class="p">]),</span> <span class="nx">data</span><span class="p">)</span>
+<span class="c1">// -&gt; {key1: 'value1', key2: 'value2'}</span>
+<span class="kd">set</span><span class="p">(</span>
+    <span class="nx">lensByPick</span><span class="p">([</span><span class="s1">'key1'</span><span class="p">,</span> <span class="s1">'key2'</span><span class="p">]),</span>
+    <span class="p">{</span><span class="na">key1</span><span class="p">:</span> <span class="s1">'newValue1'</span><span class="p">,</span> <span class="na">key2</span><span class="p">:</span> <span class="s1">'newValue2'</span><span class="p">,</span> <span class="na">key3</span><span class="p">:</span> <span class="s1">'newValue3'</span><span class="p">},</span>
+    <span class="nx">data</span>
+<span class="p">)</span>
+<span class="cm">/* -&gt;
+{
+    key: 'value',
+    key1: 'newValue1',
+    key2: 'newValue2',
+}
+*/</span>
+<span class="nx">over</span><span class="p">(</span>
+    <span class="nx">lensByPick</span><span class="p">([</span><span class="s1">'key1'</span><span class="p">,</span> <span class="s1">'key2'</span><span class="p">]),</span>
+    <span class="nx">obj</span> <span class="o">=&gt;</span> <span class="nx">mapObjIndexed</span><span class="p">(</span><span class="nx">val</span> <span class="o">=&gt;</span> <span class="nx">val</span> <span class="o">+</span> <span class="s1">'!!!'</span><span class="p">,</span> <span class="nx">obj</span><span class="p">),</span>
+    <span class="nx">data</span>
+<span class="p">)</span>
+<span class="cm">/* -&gt;
+{
+    key: 'value',
+    key1: 'value1!!!',
+    key2: 'value2!!!',
+}
+*/</span>
+</code></pre></div></div>
+<p>Начать можно отсюда — <a href="http://goo.gl/Isyijp" target="_blank">заготовка для Ramda REPL</a>.</p>
+
+<p>При помощи созданой вами линзы можно будет переписать наш пример вот так:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">lensRangeSliderByPick</span> <span class="o">=</span> <span class="nx">keys</span> <span class="o">=&gt;</span> <span class="nx">compose</span><span class="p">(</span>
+    <span class="nx">lensProp</span><span class="p">(</span><span class="s1">'rangeSlider'</span><span class="p">),</span>
+    <span class="nx">lensByPick</span><span class="p">(</span><span class="nx">keys</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">setProps</span> <span class="o">=</span> <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="kd">set</span><span class="p">(</span>
+    <span class="nx">lensRangeSliderByPick</span><span class="p">([</span><span class="s1">'from'</span><span class="p">,</span> <span class="s1">'to'</span><span class="p">,</span> <span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">]),</span>
+    <span class="nx">action</span><span class="p">.</span><span class="nx">payload</span><span class="p">,</span>
+    <span class="nx">state</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="полезные-ссылки-про-работу-с-данными">Полезные ссылки про работу с данными</h2>
+
+<ul>
+  <li><a href="http://ramdajs.com/0.21.0/index.html" target="_blank">Ramda</a> — функциональный набор утилит для Javascript (аналог Lodash);</li>
+  <li><a href="https://github.com/calmm-js/partial.lenses" target="_blank">partial.lenses</a> — альтернативная реализация линз для Javascript с более удобным и <a href="https://github.com/calmm-js/partial.lenses#motivation" target="_blank">согласованным</a> API;</li>
+  <li><a href="https://github.com/facebook/immutable-js" target="_blank">Immutable-js</a> и <a href="https://github.com/swannodette/mori" target="_blank">Mori</a> — хорошие реализации “чисто функциональных” структур данных, использующие “структурное переиспользование” для сокращения оверхеда по памяти при написании кода в иммутабельном стиле;</li>
+  <li><a href="https://github.com/tonsky/datascript" target="_blank">Datascript</a> — структура данных напоминающая in-memory базу данных(с индексами, связями, и богатым языком запросов). Может подойти вам если ваши даные очень-очень сложные(со множеством связей) и стандартные структуры данных неудобны для вас даже при использовании линз;</li>
+  <li><a href="https://codewords.recurse.com/issues/six/immutability-is-not-enough" target="_blank">Immutability is not enough</a> — хорошая статья о том, что многие ошибки управления данными, которые присутсвуют в мутабельном коде, перешли и в иммутабельный.</li>
+</ul>
+
+<p>Спасибо за внимание!</p>
+
+<p>Возникшие вопросы можно задавать в комментариях или мне в твиттере - <a href="https://twitter.com/bracketsarrows" target="_blank">@bracketsarrows</a></p>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter25896539 = new Ya.Metrika({id:25896539,
+						webvisor:true,
+						clickmap:true,
+						trackLinks:true,
+						accurateTrackBounce:true});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/25896539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</body>
+</html>
