@@ -3,12 +3,12 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>CSSSR - page 3 &#8211; CSSSR</title>
+	<title>CSSSR Garbage Collector #31 &#8211; CSSSR</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.">
+	<meta name="description" content="V8, Webpack 4, Dart 2 и другие интересные буквы и цифры из наших чатов">
 	<meta name="author" content="CSSSR">
-	
-	<link rel="canonical" href="/page3/">
+	<meta name="keywords" content="">
+	<link rel="canonical" href="/2018/02/28/cgc-31">
 
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="/css/main.css" type="text/css">
@@ -17,11 +17,11 @@
 	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
 	<meta property="og:locale" content="ru_RU">
 	<meta property="og:type" content="article">
-	<meta property="og:title" content="CSSSR - page 3">
-	<meta property="og:description" content="CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.">
-	<meta property="og:url" content="/page3/index.html">
+	<meta property="og:title" content="CSSSR Garbage Collector #31">
+	<meta property="og:description" content="V8, Webpack 4, Dart 2 и другие интересные буквы и цифры из наших чатов">
+	<meta property="og:url" content="/2018/02/28/cgc-31">
 	<meta property="og:site_name" content="CSSSR">
-	
+	<meta property="og:image" content="http://blog.csssr.ru/images/share/cgc-cover-31.jpg">
 
 	<!-- Icons -->
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -39,11 +39,11 @@
 	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
 	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
 	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
-	<meta name="application-name" content="CSSSR - page 3">
-	<meta name="msapplication-tooltip" content="CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.">
+	<meta name="application-name" content="CSSSR Garbage Collector #31">
+	<meta name="msapplication-tooltip" content="V8, Webpack 4, Dart 2 и другие интересные буквы и цифры из наших чатов">
 	<meta name="msapplication-TileColor" content="#ffffff">
 	<meta name="msapplication-TileImage" content="/mstile-large.png">
-	<meta name="msapplication-starturl" content="/page3/index.html">
+	<meta name="msapplication-starturl" content="/2018/02/28/cgc-31">
 	<meta name="msapplication-tap-highlight" content="no">
 	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
 	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
@@ -86,52 +86,55 @@
 
 		<div class="post p2 p-responsive wrap" role="main">
 			<div class="measure">
-				<div class="home">
-  <div class="posts">
-    
-      <div class="post">
-        <a href="/2015/03/05/managers-qualities" class="post-link">
-          <p class="post-meta">Mar 5, 2015</p>
-          <h3 class="h2 post-title">Я менеджер, если...</h3>
-          <p class="post-summary">Пост про то, как мы учились нанимать менеджеров, и что из этого получилось.</p>
-        </a>
-      </div>
-    
-      <div class="post">
-        <a href="/2014/09/24/day-of-caps" class="post-link">
-          <p class="post-meta">Sep 24, 2014</p>
-          <h3 class="h2 post-title">ДЕНЬ КАПСА</h3>
-          <p class="post-summary">24 СЕНТЯБРЯ В CSSSR ОТМЕЧАЕТСЯ ДЕНЬ КАПСА.</p>
-        </a>
-      </div>
-    
-      <div class="post">
-        <a href="/2014/08/17/work-in-csssr" class="post-link">
-          <p class="post-meta">Aug 17, 2014</p>
-          <h3 class="h2 post-title">Работа в CSSSR — взгляд изнутри</h3>
-          <p class="post-summary">CSSSR — это не только безупречно сверстанные сайты, CSSSR — это прежде всего команда.</p>
-        </a>
-      </div>
-    
-  </div>
+				
 
-  
 
-  <div class="pagination clearfix mb1 mt4">
-	<div class="left">
+<div class="post-header mb2">
+	<h1>CSSSR Garbage Collector #31</h1>
+	<span class="post-meta">
+		Feb 28, 2018
 		
-			<a class="pagination-item" href="/page2/">Newer</a>
+			by <a target="_blank" class="post-author" rel="author" href="https://twitter.com/ArtyomResh">reshnaut</a>
 		
-	</div>
-	<div class="right">
-		
-			<span class="pagination-item disabled">Older</span>
-		
-	</div>
+	</span><br>
+	
+	<span class="post-meta small">1 minute read</span>
 </div>
 
-</div>
+<article class="post-content">
+	
+<p><img src="/images/share/cgc-cover-31.jpg" alt="CSSSR Garbage Collector" /></p>
 
+<ul>
+  <li><a href="http://www.mattzeunert.com/2018/01/25/v8-javascript-memory-quiz.html"><code class="highlighter-rouge">en</code> V8 Quiz ;)</a> — пройди тест и погрузись в тайны V8</li>
+  <li><a href="https://github.com/mocoding-software/redux-automata"><img src="/images/icons/github.png" alt="github" /> Руки чешутся попробовать</a> — генерируем редьюсеры</li>
+  <li><a href="https://github.com/webpack/webpack/releases/tag/v4.0.0"><img src="/images/icons/github.png" alt="github" /> Webpack 4 вылупился</a> — количество жертв и преждевременно обновившихся проектов пока не сообщается</li>
+  <li><a href="https://habrahabr.ru/company/cloud4y/blog/349826/">Классные мелочи для лучшего UI и UX</a> — советы от Cloud4Y</li>
+  <li><a href="https://medium.com/@asandholm/announcing-dart-2-80ba01f43b6"><code class="highlighter-rouge">en</code> <img src="/images/icons/medium.png" alt="medium" /> Google тут Dart 2 выпустил</a> — перезагрузка, посмотрим, что получилось на этот раз</li>
+  <li><a href="https://habrahabr.ru/company/jugru/blog/349630/">Б — безопасность</a> — об уязвимостях приложений, методах обнаружения и защиты</li>
+  <li><a href="https://www.youtube.com/watch?v=LmG1KxKcevE&amp;t=24992s"><img src="/images/icons/youtube.png" alt="yt" /> Доклад на русском про Houdini — будущее CSS</a></li>
+  <li><a href="https://www.youtube.com/watch?v=j4_9BZezSUA"><img src="/images/icons/youtube.png" alt="yt" /> Джейк Арчибальд про event loop</a> — потому что повторение — мать учения</li>
+</ul>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
 			</div>
 		</div>

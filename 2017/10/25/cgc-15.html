@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>CSSSR Garbage Collector #15 &#8211; CSSSR</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Новые фичи ChromeDevTools, доступность и другие интересные материалы из наших чатов">
+	<meta name="author" content="CSSSR">
+	<meta name="keywords" content="cgc">
+	<link rel="canonical" href="/2017/10/25/cgc-15">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/css/main.css" type="text/css">
+
+	<!-- Open Graph -->
+	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="CSSSR Garbage Collector #15">
+	<meta property="og:description" content="Новые фичи ChromeDevTools, доступность и другие интересные материалы из наших чатов">
+	<meta property="og:url" content="/2017/10/25/cgc-15">
+	<meta property="og:site_name" content="CSSSR">
+	<meta property="og:image" content="http://blog.csssr.ru/images/share/cgc-cover-15.jpg">
+
+	<!-- Icons -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<link sizes="57x57" href="/apple-touch-icon-57x57.png" rel="apple-touch-icon">
+	<link sizes="114x114" href="/apple-touch-icon-114x114.png" rel="apple-touch-icon">
+	<link sizes="72x72" href="/apple-touch-icon-72x72.png" rel="apple-touch-icon">
+	<link sizes="144x144" href="/apple-touch-icon-144x144.png" rel="apple-touch-icon">
+	<link sizes="60x60" href="/apple-touch-icon-60x60.png" rel="apple-touch-icon">
+	<link sizes="120x120" href="/apple-touch-icon-120x120.png" rel="apple-touch-icon">
+	<link sizes="76x76" href="/apple-touch-icon-76x76.png" rel="apple-touch-icon">
+	<link sizes="152x152" href="/apple-touch-icon-152x152.png" rel="apple-touch-icon">
+	<link sizes="180x180" href="/apple-touch-icon-180x180.png" rel="apple-touch-icon">
+	<link sizes="192x192" href="/favicon-192x192.png" rel="icon" type="image/png">
+	<link sizes="160x160" href="/favicon-160x160.png" rel="icon" type="image/png">
+	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
+	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
+	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
+	<meta name="application-name" content="CSSSR Garbage Collector #15">
+	<meta name="msapplication-tooltip" content="Новые фичи ChromeDevTools, доступность и другие интересные материалы из наших чатов">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/mstile-large.png">
+	<meta name="msapplication-starturl" content="/2017/10/25/cgc-15">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
+	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
+	<meta name="msapplication-wide310x150logo" content="/mstile-wide.png">
+	<meta name="msapplication-square310x310logo" content="/mstile-large.png">
+</head>
+
+<body class="">
+	<div class="site-wrap">
+		<header class="site-header px2 px-responsive">
+	<div class="wrap">
+		<nav class="header measure">
+			<a href="/" class="site-title" aria-label="CSSSR"></a>
+			<div class="header-links">
+				<a href="/" class="header-link ">Посты</a>
+				<a href="/cgc" class="header-link ">CGC</a>
+			</div>
+			
+				<div class="social-icons">
+	<div class="left">
+		
+			<a class="icon icon_github" href="https://github.com/CSSSR" aria-label="GitHub"></a>
+		
+		<a class="icon icon_rss" href="/feed.xml" aria-label="RSS"></a>
+		
+			<a class="icon icon_twitter" href="https://twitter.com/csssr_dev" aria-label="Twitter"></a>
+		
+		
+			<a class="icon icon_envelope" href="mailto:hr@csssr.io" aria-label="Напишите нам"></a>
+		
+	</div>
+</div>
+
+			
+		</nav>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+
+		<div class="post p2 p-responsive wrap" role="main">
+			<div class="measure">
+				
+
+
+<div class="post-header mb2">
+	<h1>CSSSR Garbage Collector #15</h1>
+	<span class="post-meta">
+		Oct 25, 2017
+		
+			by <a target="_blank" class="post-author" rel="author" href="https://twitter.com/ArtyomResh">reshnaut</a>
+		
+	</span><br>
+	
+	<span class="post-meta small">1 minute read</span>
+</div>
+
+<article class="post-content">
+	
+<p><img src="/images/share/cgc-cover-15.jpg" alt="CSSSR Garbage Collector" /></p>
+
+<p>Еженедельная подборка ссылок из чатов CSSSR на интересные материалы.</p>
+<ul>
+  <li>Наш комрад <a href="https://github.com/myfailemtions">Арарат</a> попробовал в Vue + Vuex и написал небольшой редактор для создания документации <a href="https://github.com/RUInCodeWeTrust/InDocsWeTrust"><img src="/images/icons/github.png" alt="github" /> <code class="highlighter-rouge">InDocsWeTrust</code></a></li>
+  <li>CSSSR Shorts:
+    <ul>
+      <li><a href="https://www.youtube.com/watch?v=4u914WNbo1o&amp;index=20&amp;list=PLLtDv0NfxtZxP4kESksdaHyN3ss4nsONz&amp;t=20s"><img src="/images/icons/youtube.png" alt="yt" /> №20: Вложенные структуры данных в reduxForm</a></li>
+      <li><a href="https://www.youtube.com/watch?v=H-xNIxJSzOc&amp;list=PLLtDv0NfxtZxP4kESksdaHyN3ss4nsONz&amp;index=21"><img src="/images/icons/youtube.png" alt="yt" /> №21: Как изменить значение Field из формы</a></li>
+      <li><a href="https://www.youtube.com/watch?v=xyZiaz5WBXU&amp;list=PLLtDv0NfxtZxP4kESksdaHyN3ss4nsONz&amp;index=22"><img src="/images/icons/youtube.png" alt="yt" /> №22: Изменение нескольких полей одной функцией</a></li>
+      <li><a href="https://www.youtube.com/watch?v=qhhYyZfBArI&amp;list=PLLtDv0NfxtZxP4kESksdaHyN3ss4nsONz&amp;index=23"><img src="/images/icons/youtube.png" alt="yt" /> №23: Заставляем reduxForm слушать хранилище для initialValues</a></li>
+    </ul>
+  </li>
+  <li><a href="https://www.youtube.com/channel/UCBVZa_qgKhT8_MMqvR0bNQA/videos"><img src="/images/icons/youtube.png" alt="yt" /> Доклады с Krasnodar Dev Days #2</a> таки залили, смотрим и наслаждаемся</li>
+  <li><a href="https://www.youtube.com/watch?v=2fgYmEtTCPs"><img src="/images/icons/youtube.png" alt="yt" /> Порочный круг: почему разработчики сами виноваты в дефиците кадров</a> — доклад Владислава Козули</li>
+  <li><code class="highlighter-rouge">en</code> <a href="https://youtu.be/7-XnEMrQnn4"><img src="/images/icons/youtube.png" alt="yt" /> Будущие фичи ChromeDevTools (это прекрасно)</a></li>
+  <li>Интересно, как работают фреймы в браузере и достигаются 60fps? Тогда вам <a href="https://habrahabr.ru/post/340176/">сюда</a></li>
+  <li><a href="https://github.com/Microsoft/TypeScript/issues/16392"><img src="/images/icons/github.png" alt="github" /> Шикарная ишью с ссылками на крутые около-тайплевел хаки</a></li>
+  <li>Немного о доступности:
+    <ul>
+      <li><a href="http://weblind.ru/">Weblind</a> — сайт с рекомендациями по разработке сайтов для людей с нарушениями зрения</li>
+      <li><a href="http://khan.github.io/tota11y/">tota11y</a> — инструмент для проверки доступности ваших продуктов</li>
+    </ul>
+  </li>
+  <li><a href="https://itvdn.com/ru/shares/reactjs_free?utm_source=yb_action_rjsfree">Бесплатный курс по React’у от ITVDN</a></li>
+  <li><a href="https://rxviz.com/">Визуализация RxJS Observable 🔥</a></li>
+</ul>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter25896539 = new Ya.Metrika({id:25896539,
+						webvisor:true,
+						clickmap:true,
+						trackLinks:true,
+						accurateTrackBounce:true});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/25896539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</body>
+</html>

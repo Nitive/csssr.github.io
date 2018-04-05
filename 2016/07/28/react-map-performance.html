@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Повышаем производительность рендера списков в React-компонентах &#8211; CSSSR</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.">
+	<meta name="author" content="CSSSR">
+	<meta name="keywords" content="post">
+	<link rel="canonical" href="/2016/07/28/react-map-performance">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/css/main.css" type="text/css">
+
+	<!-- Open Graph -->
+	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Повышаем производительность рендера списков в React-компонентах">
+	<meta property="og:description" content="CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.">
+	<meta property="og:url" content="/2016/07/28/react-map-performance">
+	<meta property="og:site_name" content="CSSSR">
+	
+
+	<!-- Icons -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<link sizes="57x57" href="/apple-touch-icon-57x57.png" rel="apple-touch-icon">
+	<link sizes="114x114" href="/apple-touch-icon-114x114.png" rel="apple-touch-icon">
+	<link sizes="72x72" href="/apple-touch-icon-72x72.png" rel="apple-touch-icon">
+	<link sizes="144x144" href="/apple-touch-icon-144x144.png" rel="apple-touch-icon">
+	<link sizes="60x60" href="/apple-touch-icon-60x60.png" rel="apple-touch-icon">
+	<link sizes="120x120" href="/apple-touch-icon-120x120.png" rel="apple-touch-icon">
+	<link sizes="76x76" href="/apple-touch-icon-76x76.png" rel="apple-touch-icon">
+	<link sizes="152x152" href="/apple-touch-icon-152x152.png" rel="apple-touch-icon">
+	<link sizes="180x180" href="/apple-touch-icon-180x180.png" rel="apple-touch-icon">
+	<link sizes="192x192" href="/favicon-192x192.png" rel="icon" type="image/png">
+	<link sizes="160x160" href="/favicon-160x160.png" rel="icon" type="image/png">
+	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
+	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
+	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
+	<meta name="application-name" content="Повышаем производительность рендера списков в React-компонентах">
+	<meta name="msapplication-tooltip" content="CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/mstile-large.png">
+	<meta name="msapplication-starturl" content="/2016/07/28/react-map-performance">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
+	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
+	<meta name="msapplication-wide310x150logo" content="/mstile-wide.png">
+	<meta name="msapplication-square310x310logo" content="/mstile-large.png">
+</head>
+
+<body class="">
+	<div class="site-wrap">
+		<header class="site-header px2 px-responsive">
+	<div class="wrap">
+		<nav class="header measure">
+			<a href="/" class="site-title" aria-label="CSSSR"></a>
+			<div class="header-links">
+				<a href="/" class="header-link ">Посты</a>
+				<a href="/cgc" class="header-link ">CGC</a>
+			</div>
+			
+				<div class="social-icons">
+	<div class="left">
+		
+			<a class="icon icon_github" href="https://github.com/CSSSR" aria-label="GitHub"></a>
+		
+		<a class="icon icon_rss" href="/feed.xml" aria-label="RSS"></a>
+		
+			<a class="icon icon_twitter" href="https://twitter.com/csssr_dev" aria-label="Twitter"></a>
+		
+		
+			<a class="icon icon_envelope" href="mailto:hr@csssr.io" aria-label="Напишите нам"></a>
+		
+	</div>
+</div>
+
+			
+		</nav>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+
+		<div class="post p2 p-responsive wrap" role="main">
+			<div class="measure">
+				
+
+
+<div class="post-header mb2">
+	<h1>Повышаем производительность рендера списков в React-компонентах</h1>
+	<span class="post-meta">
+		Jul 28, 2016
+		
+			by <a target="_blank" class="post-author" rel="author" href="https://twitter.com/felix_exter">felix_exter</a>
+		
+	</span><br>
+	
+	<span class="post-meta small">6 minute read</span>
+</div>
+
+<article class="post-content">
+	<p><img src="/images/react.png" alt="image" /></p>
+
+<p>Часто при написании компонентов приходится использовать мапы для рендера списков.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(({</span> <span class="nx">value</span> <span class="p">},</span> <span class="nx">i</span><span class="p">)</span> <span class="o">=&gt;</span>
+	<span class="o">&lt;</span><span class="nx">div</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">i</span><span class="p">}</span> <span class="nx">styleName</span><span class="o">=</span><span class="s1">'value'</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Элемент списка может содержать много разметки.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(({</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span> <span class="p">},</span> <span class="nx">i</span><span class="p">)</span> <span class="o">=&gt;</span>
+	<span class="o">&lt;</span><span class="nx">div</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">i</span><span class="p">}</span> <span class="nx">styleName</span><span class="o">=</span><span class="s1">'item'</span><span class="o">&gt;</span>
+		<span class="o">&lt;</span><span class="nx">div</span> <span class="nx">styleName</span><span class="o">=</span><span class="s1">'name'</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>		<span class="o">&lt;</span><span class="nx">div</span> <span class="nx">styleName</span><span class="o">=</span><span class="s1">'value'</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>	<span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Обычно всё это нужно <strong>выносить в отдельный компонент и переиспользовать</strong>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(({</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span> <span class="p">},</span> <span class="nx">i</span><span class="p">)</span> <span class="o">=&gt;</span>
+	<span class="o">&lt;</span><span class="nx">Item</span>
+		<span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">i</span><span class="p">}</span>
+		<span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span>
+		<span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span>
+	<span class="sr">/</span><span class="err">&gt;
+</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Использование индекса в ключе - антипаттерн.</strong>
+Я показывал поэтапно, но лучше сразу выбросить текущий индекс из <code class="highlighter-rouge">key</code> и заменить его на уникальный <code class="highlighter-rouge">id</code>.
+React не будет перерендеривать уже имеющийся компонент с этим же ключом, хотя в мапе пропсы поменялись.
+Побочным эффектом, например, может быть дублирование или изменение порядка в списке и т.п.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(({</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span> <span class="p">})</span> <span class="o">=&gt;</span>
+	<span class="o">&lt;</span><span class="nx">Item</span>
+		<span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span>
+		<span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span>
+		<span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span>
+	<span class="sr">/</span><span class="err">&gt;
+</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Но иногда в вёрстке элементов списка нужно добавлять внешние отступы.
+Т.к. компоненты переиспользуются, задавать им их нелогично.
+Для этого добавляется обёртка над компонетом.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(({</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span> <span class="p">})</span> <span class="o">=&gt;</span>
+	<span class="o">&lt;</span><span class="nx">div</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span> <span class="nx">styleName</span><span class="o">=</span><span class="s1">'item'</span><span class="o">&gt;</span>
+		<span class="o">&lt;</span><span class="nx">Item</span> <span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span> <span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span>	<span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Вроде бы всё норм, но не так давно <a href="https://github.com/laiff">@laiff</a> поделился опытом по этому поводу.
+Чтобы при генерации разметки получить этот <code class="highlighter-rouge">div</code>,
+React сначала рендерит компонент в разметку, потом производится дифф определённым алгоритмом.
+Если в мапе находится сразу компонент, то это процесс отсекается до этого алгоритма, т.к. есть <code class="highlighter-rouge">ReactInstance</code> с <code class="highlighter-rouge">shouldComponentUpdate</code> и другими проверками типа <code class="highlighter-rouge">key</code>.
+Т.е. <strong>снова нужно выноcить в компонент</strong>.
+Получается то же самое, что было и раньше, только в это раз в вёрстке есть отступы.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(({</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span> <span class="p">})</span> <span class="o">=&gt;</span>
+	<span class="o">&lt;</span><span class="nx">Item</span>
+		<span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span>
+		<span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span>
+		<span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span>
+	<span class="sr">/</span><span class="err">&gt;
+</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Использование компонентов в мапах также производительней при добавлении различных обработчиков,
+например, на событие <code class="highlighter-rouge">onClick</code>.
+Если с обёрткой, это делалось путём вызова функции
+и передачи ей необходимых данных, создавая каждый раз новую функцию:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(({</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span> <span class="p">})</span> <span class="o">=&gt;</span>
+	<span class="o">&lt;</span><span class="nx">div</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span> <span class="nx">styleName</span><span class="o">=</span><span class="s1">'item'</span><span class="o">&gt;</span>
+		<span class="o">&lt;</span><span class="nx">Item</span>
+			<span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span>
+			<span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span>
+			<span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">onClick</span><span class="p">(</span><span class="nx">id</span><span class="p">)}</span>
+		<span class="sr">/</span><span class="err">&gt;
+</span>	<span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>То напрямую с компонентом передаются все необходимые данные и сама функция, которая внутри создастся один раз:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(({</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span> <span class="p">})</span> <span class="o">=&gt;</span>
+	<span class="o">&lt;</span><span class="nx">Item</span>
+		<span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span>
+		<span class="nx">id</span><span class="o">=</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span>
+		<span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span>
+		<span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span>
+		<span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">onClick</span><span class="p">}</span>
+	<span class="sr">/</span><span class="err">&gt;
+</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Отдельно стоит упомянуть о либах <a href="https://github.com/felixgirault/pure-render-decorator"><code class="highlighter-rouge">pure-render-decorator</code></a>
+и <a href="https://github.com/acdlite/recompose"><code class="highlighter-rouge">recompose</code></a>,
+которые добавляют компоненту проверку пропсов в <code class="highlighter-rouge">shouldComponentUpdate</code>
+и решают, когда нужен перерендер, тем самым увеличивая скорость работы приложения.
+В будущем они не понадобятся, т.к. в React это будет работать по умолчанию из коробки.</p>
+
+<p>Всё вместе в итоге.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// list/index.jsx</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'react'</span>
+<span class="k">import</span> <span class="nx">pure</span> <span class="k">from</span> <span class="s1">'pure-render-decorator'</span>
+<span class="k">import</span> <span class="nx">css</span> <span class="k">from</span> <span class="s1">'react-css-modules'</span>
+<span class="k">import</span> <span class="nx">styles</span> <span class="k">from</span> <span class="s1">'./styles.sss'</span>
+<span class="k">import</span> <span class="nx">ListItem</span> <span class="k">from</span> <span class="s1">'./item'</span>
+
+<span class="p">@</span><span class="nd">css</span><span class="p">(</span><span class="nx">styles</span><span class="p">)</span>
+<span class="p">@</span><span class="nd">pure</span>
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">List</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+	<span class="c1">// ...</span>
+
+	<span class="nx">renderItem</span> <span class="o">=</span> <span class="p">({</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span> <span class="p">})</span> <span class="o">=&gt;</span>
+		<span class="o">&lt;</span><span class="nx">ListItem</span>
+			<span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span>
+			<span class="nx">id</span><span class="o">=</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span>
+			<span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span>
+			<span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span>
+			<span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">onClick</span><span class="p">}</span>
+		<span class="sr">/</span><span class="err">&gt;
+</span>
+	<span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">styleName</span><span class="o">=</span><span class="s1">'list'</span><span class="o">&gt;</span>
+			<span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">renderItem</span><span class="p">)}</span>
+		<span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// list/item.jsx</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'react'</span>
+<span class="k">import</span> <span class="nx">pure</span> <span class="k">from</span> <span class="s1">'pure-render-decorator'</span>
+<span class="k">import</span> <span class="nx">css</span> <span class="k">from</span> <span class="s1">'react-css-modules'</span>
+<span class="k">import</span> <span class="nx">styles</span> <span class="k">from</span> <span class="s1">'./styles.sss'</span>
+<span class="k">import</span> <span class="nx">Item</span> <span class="k">from</span> <span class="s1">'../item'</span>
+
+<span class="p">@</span><span class="nd">css</span><span class="p">(</span><span class="nx">styles</span><span class="p">)</span>
+<span class="p">@</span><span class="nd">pure</span>
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ListItem</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+	<span class="c1">// ...</span>
+
+	<span class="nx">onClick</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">onClick</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+
+	<span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+		<span class="kd">const</span> <span class="p">{</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span> <span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span>
+
+		<span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">styleName</span><span class="o">=</span><span class="s1">'item'</span><span class="o">&gt;</span>
+			<span class="o">&lt;</span><span class="nx">Item</span>
+				<span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span>
+				<span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span>
+				<span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">onClick</span><span class="p">}</span>
+			<span class="sr">/</span><span class="err">&gt;
+</span>		<span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// item/index.jsx</span>
+<span class="k">import</span> <span class="nx">pure</span> <span class="k">from</span> <span class="s1">'pure-render-decorator'</span>
+<span class="k">import</span> <span class="nx">css</span> <span class="k">from</span> <span class="s1">'react-css-modules'</span>
+<span class="k">import</span> <span class="nx">styles</span> <span class="k">from</span> <span class="s1">'./styles.sss'</span>
+
+<span class="kd">function</span> <span class="nx">Item</span><span class="p">({</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span> <span class="p">})</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">styleName</span><span class="o">=</span><span class="s1">'item'</span><span class="o">&gt;</span>
+		<span class="o">&lt;</span><span class="nx">div</span> <span class="nx">styleName</span><span class="o">=</span><span class="s1">'name'</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>		<span class="o">&lt;</span><span class="nx">div</span> <span class="nx">styleName</span><span class="o">=</span><span class="s1">'value'</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>	<span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span><span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">pure</span><span class="p">(</span><span class="nx">css</span><span class="p">(</span><span class="nx">Item</span><span class="p">,</span> <span class="nx">styles</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Вот так готовятся компоненты в нашей кухне.
+А как вы это делаете?</p>
+
+<p>Человек из космоса,
+<a href="https://twitter.com/felix_exter">@felixexter</a></p>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter25896539 = new Ya.Metrika({id:25896539,
+						webvisor:true,
+						clickmap:true,
+						trackLinks:true,
+						accurateTrackBounce:true});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/25896539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</body>
+</html>

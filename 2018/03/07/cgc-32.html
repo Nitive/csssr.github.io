@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>CSSSR Garbage Collector #32 &#8211; CSSSR</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Создаём генератор случайных чисел, программируем квантовые компьютеры и изучаем массу других интересностей из наших чатов">
+	<meta name="author" content="CSSSR">
+	<meta name="keywords" content="">
+	<link rel="canonical" href="/2018/03/07/cgc-32">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/css/main.css" type="text/css">
+
+	<!-- Open Graph -->
+	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="CSSSR Garbage Collector #32">
+	<meta property="og:description" content="Создаём генератор случайных чисел, программируем квантовые компьютеры и изучаем массу других интересностей из наших чатов">
+	<meta property="og:url" content="/2018/03/07/cgc-32">
+	<meta property="og:site_name" content="CSSSR">
+	<meta property="og:image" content="http://blog.csssr.ru/images/share/cgc-cover-32.jpg">
+
+	<!-- Icons -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<link sizes="57x57" href="/apple-touch-icon-57x57.png" rel="apple-touch-icon">
+	<link sizes="114x114" href="/apple-touch-icon-114x114.png" rel="apple-touch-icon">
+	<link sizes="72x72" href="/apple-touch-icon-72x72.png" rel="apple-touch-icon">
+	<link sizes="144x144" href="/apple-touch-icon-144x144.png" rel="apple-touch-icon">
+	<link sizes="60x60" href="/apple-touch-icon-60x60.png" rel="apple-touch-icon">
+	<link sizes="120x120" href="/apple-touch-icon-120x120.png" rel="apple-touch-icon">
+	<link sizes="76x76" href="/apple-touch-icon-76x76.png" rel="apple-touch-icon">
+	<link sizes="152x152" href="/apple-touch-icon-152x152.png" rel="apple-touch-icon">
+	<link sizes="180x180" href="/apple-touch-icon-180x180.png" rel="apple-touch-icon">
+	<link sizes="192x192" href="/favicon-192x192.png" rel="icon" type="image/png">
+	<link sizes="160x160" href="/favicon-160x160.png" rel="icon" type="image/png">
+	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
+	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
+	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
+	<meta name="application-name" content="CSSSR Garbage Collector #32">
+	<meta name="msapplication-tooltip" content="Создаём генератор случайных чисел, программируем квантовые компьютеры и изучаем массу других интересностей из наших чатов">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/mstile-large.png">
+	<meta name="msapplication-starturl" content="/2018/03/07/cgc-32">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
+	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
+	<meta name="msapplication-wide310x150logo" content="/mstile-wide.png">
+	<meta name="msapplication-square310x310logo" content="/mstile-large.png">
+</head>
+
+<body class="">
+	<div class="site-wrap">
+		<header class="site-header px2 px-responsive">
+	<div class="wrap">
+		<nav class="header measure">
+			<a href="/" class="site-title" aria-label="CSSSR"></a>
+			<div class="header-links">
+				<a href="/" class="header-link ">Посты</a>
+				<a href="/cgc" class="header-link ">CGC</a>
+			</div>
+			
+				<div class="social-icons">
+	<div class="left">
+		
+			<a class="icon icon_github" href="https://github.com/CSSSR" aria-label="GitHub"></a>
+		
+		<a class="icon icon_rss" href="/feed.xml" aria-label="RSS"></a>
+		
+			<a class="icon icon_twitter" href="https://twitter.com/csssr_dev" aria-label="Twitter"></a>
+		
+		
+			<a class="icon icon_envelope" href="mailto:hr@csssr.io" aria-label="Напишите нам"></a>
+		
+	</div>
+</div>
+
+			
+		</nav>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+
+		<div class="post p2 p-responsive wrap" role="main">
+			<div class="measure">
+				
+
+
+<div class="post-header mb2">
+	<h1>CSSSR Garbage Collector #32</h1>
+	<span class="post-meta">
+		Mar 7, 2018
+		
+			by <a target="_blank" class="post-author" rel="author" href="https://twitter.com/ArtyomResh">reshnaut</a>
+		
+	</span><br>
+	
+	<span class="post-meta small">1 minute read</span>
+</div>
+
+<article class="post-content">
+	
+<p><img src="/images/share/cgc-cover-32.jpg" alt="CSSSR Garbage Collector" /></p>
+
+<ul>
+  <li>Наш и без того трудолюбивый и просто замечательный комрад <a href="https://github.com/kosmogradsky">Женя</a> был пронзён стрелой творчества. Итог — Medium пополнился тремя отличными статьями по основам управления реактивными данными в Angular:
+    <ul>
+      <li><a href="https://medium.com/@kosmogradsky/observable-%D0%B2-rxjs-%D0%BA%D1%80%D0%B0%D1%82%D0%BA%D0%BE%D0%B5-%D0%B2%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5-34939ff5f7d7"><img src="/images/icons/medium.png" alt="medium" /> Observable в RxJS: краткое введение</a></li>
+      <li><a href="https://medium.com/@kosmogradsky/subject-%D0%B2-rxjs-%D0%BA%D1%80%D0%B0%D1%82%D0%BA%D0%BE%D0%B5-%D0%B2%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5-c9099231be6d"><img src="/images/icons/medium.png" alt="medium" /> Subject в RxJS: краткое введение</a></li>
+      <li><a href="https://medium.com/@kosmogradsky/%D1%81%D0%BB%D1%83%D0%B6%D0%B1%D1%8B-%D0%BF%D0%BE%D1%82%D0%BE%D0%BA%D0%BE-%D0%B7%D1%80%D0%B5%D0%BB%D0%B8%D1%89%D0%BD%D1%8B%D1%85-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85-%D0%B2-angular-5960fd3d83c7"><img src="/images/icons/medium.png" alt="medium" /> Службы потоко-зрелищных данных в Angular</a></li>
+    </ul>
+  </li>
+  <li><a href="https://tproger.ru/translations/quantum-computer-programming/">Учимся программировать квантовый компьютер на основе игры «Морской бой»</a> — «Как это мимо? Я же прямо в тебя стрелял!»</li>
+  <li><a href="https://shift.infinite.red/redux-observable-epics-vs-redux-sagas-8e53610c0eda"><code class="highlighter-rouge">en</code> Redux-Observable Epics vs Redux-Sagas</a> — да начнётся холивар!</li>
+  <li><a href="https://habrahabr.ru/company/oleg-bunin/blog/350252/">Разработка Rich Text Editor: проблемы и решения</a> — если вам не хватает сложностей и боли в жизни, попробуйте сделать свой редактор текста в вебе</li>
+  <li><a href="https://beta.observablehq.com/">Observable</a> — «живой» и очень крутой редактор, который понимает JS и в котором удобно создавать графику на канвасе</li>
+  <li><a href="https://medium.com/@frontman/%D1%81%D0%BB%D1%83%D1%87%D0%B0%D0%B9%D0%BD%D1%8B%D0%B5-%D1%87%D0%B8%D1%81%D0%BB%D0%B0-%D0%BD%D0%B5-%D1%81%D0%BB%D1%83%D1%87%D0%B0%D0%B9%D0%BD%D1%8B-252e08e60828"><img src="/images/icons/medium.png" alt="medium" /> Случайные числа не случайны</a> — как создать генератор случайных чисел на JS</li>
+  <li><a href="https://firebase.google.com/"><code class="highlighter-rouge">en</code> Firebase</a> — если вам нужно развернуть небольшое мобильное приложение «без регистрации и смс» с хостингом, бэкендом в реальном времени, облачными функциями и авторизацией</li>
+  <li><a href="https://compsciclub.ru/courses/Glasgow-Haskell-Compiler/2018-spring/classes/">Компилятор GHC языка Haskell: теория языков программирования в работе</a> — в конце марта в Питере В. Н. Брагилевский будет рассказывать о структуре компилятора GHC, не пропустите</li>
+  <li><a href="https://habrahabr.ru/post/350018/">Возможно, вам не нужен Rust, чтобы ускорить ваш JS</a> — исследование о том, почему иногда достаточно уделить чуть больше внимания алгоритмам, а не переписывать приложение на другой, более «быстрый» язык</li>
+  <li><a href="https://www.gitbook.com/book/frontendmasters/front-end-developer-handbook-2018/details"><code class="highlighter-rouge">en</code> Front-End Developer Handbook 2018</a> — как же в новом году без свежего гайда по фронтенду :)</li>
+  <li><a href="https://github.com/kamranahmedse/developer-roadmap"><img src="/images/icons/github.png" alt="github" /> Web developer roadmap 2018</a> — в дополнение к предыдущей ссылке: путеводитель по фронтенду, представленный в виде простой и удобной диаграммы</li>
+  <li><a href="https://philipwalton.com/articles/responsive-components-a-solution-to-the-container-queries-problem/"><code class="highlighter-rouge">en</code> The solution to the Container Queries problem</a> — Container Queries появятся ещё не скоро, а уже хочется менять стили в зависимости от размеров контейнера? Есть решение — браузерный API <code class="highlighter-rouge">ResizeObserver</code></li>
+</ul>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter25896539 = new Ya.Metrika({id:25896539,
+						webvisor:true,
+						clickmap:true,
+						trackLinks:true,
+						accurateTrackBounce:true});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/25896539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</body>
+</html>

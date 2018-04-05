@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>CSSSR Garbage Collector #24 &#8211; CSSSR</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Итоги уходящего года, хорошие новости для Rust-овчан и другие интересные ссылки из наших чатов">
+	<meta name="author" content="CSSSR">
+	<meta name="keywords" content="">
+	<link rel="canonical" href="/2017/12/27/cgc-24">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/css/main.css" type="text/css">
+
+	<!-- Open Graph -->
+	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="CSSSR Garbage Collector #24">
+	<meta property="og:description" content="Итоги уходящего года, хорошие новости для Rust-овчан и другие интересные ссылки из наших чатов">
+	<meta property="og:url" content="/2017/12/27/cgc-24">
+	<meta property="og:site_name" content="CSSSR">
+	<meta property="og:image" content="http://blog.csssr.ru/images/share/cgc-cover-24.jpg">
+
+	<!-- Icons -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<link sizes="57x57" href="/apple-touch-icon-57x57.png" rel="apple-touch-icon">
+	<link sizes="114x114" href="/apple-touch-icon-114x114.png" rel="apple-touch-icon">
+	<link sizes="72x72" href="/apple-touch-icon-72x72.png" rel="apple-touch-icon">
+	<link sizes="144x144" href="/apple-touch-icon-144x144.png" rel="apple-touch-icon">
+	<link sizes="60x60" href="/apple-touch-icon-60x60.png" rel="apple-touch-icon">
+	<link sizes="120x120" href="/apple-touch-icon-120x120.png" rel="apple-touch-icon">
+	<link sizes="76x76" href="/apple-touch-icon-76x76.png" rel="apple-touch-icon">
+	<link sizes="152x152" href="/apple-touch-icon-152x152.png" rel="apple-touch-icon">
+	<link sizes="180x180" href="/apple-touch-icon-180x180.png" rel="apple-touch-icon">
+	<link sizes="192x192" href="/favicon-192x192.png" rel="icon" type="image/png">
+	<link sizes="160x160" href="/favicon-160x160.png" rel="icon" type="image/png">
+	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
+	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
+	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
+	<meta name="application-name" content="CSSSR Garbage Collector #24">
+	<meta name="msapplication-tooltip" content="Итоги уходящего года, хорошие новости для Rust-овчан и другие интересные ссылки из наших чатов">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/mstile-large.png">
+	<meta name="msapplication-starturl" content="/2017/12/27/cgc-24">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
+	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
+	<meta name="msapplication-wide310x150logo" content="/mstile-wide.png">
+	<meta name="msapplication-square310x310logo" content="/mstile-large.png">
+</head>
+
+<body class="">
+	<div class="site-wrap">
+		<header class="site-header px2 px-responsive">
+	<div class="wrap">
+		<nav class="header measure">
+			<a href="/" class="site-title" aria-label="CSSSR"></a>
+			<div class="header-links">
+				<a href="/" class="header-link ">Посты</a>
+				<a href="/cgc" class="header-link ">CGC</a>
+			</div>
+			
+				<div class="social-icons">
+	<div class="left">
+		
+			<a class="icon icon_github" href="https://github.com/CSSSR" aria-label="GitHub"></a>
+		
+		<a class="icon icon_rss" href="/feed.xml" aria-label="RSS"></a>
+		
+			<a class="icon icon_twitter" href="https://twitter.com/csssr_dev" aria-label="Twitter"></a>
+		
+		
+			<a class="icon icon_envelope" href="mailto:hr@csssr.io" aria-label="Напишите нам"></a>
+		
+	</div>
+</div>
+
+			
+		</nav>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+
+		<div class="post p2 p-responsive wrap" role="main">
+			<div class="measure">
+				
+
+
+<div class="post-header mb2">
+	<h1>CSSSR Garbage Collector #24</h1>
+	<span class="post-meta">
+		Dec 27, 2017
+		
+			by <a target="_blank" class="post-author" rel="author" href="https://www.twitter.com/Vindizh">vindizh</a>
+		
+	</span><br>
+	
+	<span class="post-meta small">1 minute read</span>
+</div>
+
+<article class="post-content">
+	
+<p><img src="/images/share/cgc-cover-24.jpg" alt="CSSSR Garbage Collector" /></p>
+
+<ul>
+  <li><code class="highlighter-rouge">en</code> <a href="https://blog.logrocket.com/frontend-in-2017-the-important-parts-4548d085977f"><img src="/images/icons/medium.png" alt="medium" /> Frontend in 2017: The important parts</a> — итоги уходящего фронтенд-года по версии LogRocket</li>
+  <li><code class="highlighter-rouge">en</code> <a href="https://medium.freecodecamp.org/modern-frontend-hacking-cheatsheets-df9c2566c72a"><img src="/images/icons/medium.png" alt="medium" /> The best front-end hacking cheatsheets — all in one place</a> — подборка шпаргалок на все случаи жизни от FreeCodeCamp</li>
+  <li><code class="highlighter-rouge">en</code> <a href="https://medium.com/dev-channel/a-pinterest-progressive-web-app-performance-case-study-3bd6ed2e6154"><img src="/images/icons/medium.png" alt="medium" /> A Pinterest Progressive Web App Performance Case Study</a>, <a href="https://medium.com/@addyosmani/a-tinder-progressive-web-app-performance-case-study-78919d98ece0"><img src="/images/icons/medium.png" alt="medium" /> A Tinder Progressive Web App Performance Case Study</a> — ПВА — не клей, ПВА — Progressive Web Apps, узнаём больше на примере Pinterest и Tinder</li>
+  <li><code class="highlighter-rouge">en</code> <a href="https://bitsofco.de/understanding-the-critical-rendering-path/">Understanding the Critical Rendering Path</a> — о работе браузера и оптимизации</li>
+  <li><a href="https://github.com/DenisKolodin/yew"><img src="/images/icons/github.png" alt="github" /> Yew</a> — ликуйте, Rust-овчане, фреймворк для разработки React-like веб-приложений на Rust</li>
+  <li><a href="https://azu.github.io/what-is-this/"><img src="/images/icons/github.png" alt="github" /> This is about <code class="highlighter-rouge">this</code></a> — небольшая шпаргалка по <code class="highlighter-rouge">this</code> в JavaScript</li>
+</ul>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter25896539 = new Ya.Metrika({id:25896539,
+						webvisor:true,
+						clickmap:true,
+						trackLinks:true,
+						accurateTrackBounce:true});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/25896539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</body>
+</html>

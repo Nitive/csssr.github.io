@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>CSSSR Garbage Collector #20 &#8211; CSSSR</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Программирование на Idris, лекции Кайла Симпсона и другие интересные материалы из наших чатов">
+	<meta name="author" content="CSSSR">
+	<meta name="keywords" content="">
+	<link rel="canonical" href="/2017/11/29/cgc-20">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/css/main.css" type="text/css">
+
+	<!-- Open Graph -->
+	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="CSSSR Garbage Collector #20">
+	<meta property="og:description" content="Программирование на Idris, лекции Кайла Симпсона и другие интересные материалы из наших чатов">
+	<meta property="og:url" content="/2017/11/29/cgc-20">
+	<meta property="og:site_name" content="CSSSR">
+	<meta property="og:image" content="http://blog.csssr.ru/images/share/cgc-cover-20.jpg">
+
+	<!-- Icons -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<link sizes="57x57" href="/apple-touch-icon-57x57.png" rel="apple-touch-icon">
+	<link sizes="114x114" href="/apple-touch-icon-114x114.png" rel="apple-touch-icon">
+	<link sizes="72x72" href="/apple-touch-icon-72x72.png" rel="apple-touch-icon">
+	<link sizes="144x144" href="/apple-touch-icon-144x144.png" rel="apple-touch-icon">
+	<link sizes="60x60" href="/apple-touch-icon-60x60.png" rel="apple-touch-icon">
+	<link sizes="120x120" href="/apple-touch-icon-120x120.png" rel="apple-touch-icon">
+	<link sizes="76x76" href="/apple-touch-icon-76x76.png" rel="apple-touch-icon">
+	<link sizes="152x152" href="/apple-touch-icon-152x152.png" rel="apple-touch-icon">
+	<link sizes="180x180" href="/apple-touch-icon-180x180.png" rel="apple-touch-icon">
+	<link sizes="192x192" href="/favicon-192x192.png" rel="icon" type="image/png">
+	<link sizes="160x160" href="/favicon-160x160.png" rel="icon" type="image/png">
+	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
+	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
+	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
+	<meta name="application-name" content="CSSSR Garbage Collector #20">
+	<meta name="msapplication-tooltip" content="Программирование на Idris, лекции Кайла Симпсона и другие интересные материалы из наших чатов">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/mstile-large.png">
+	<meta name="msapplication-starturl" content="/2017/11/29/cgc-20">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
+	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
+	<meta name="msapplication-wide310x150logo" content="/mstile-wide.png">
+	<meta name="msapplication-square310x310logo" content="/mstile-large.png">
+</head>
+
+<body class="">
+	<div class="site-wrap">
+		<header class="site-header px2 px-responsive">
+	<div class="wrap">
+		<nav class="header measure">
+			<a href="/" class="site-title" aria-label="CSSSR"></a>
+			<div class="header-links">
+				<a href="/" class="header-link ">Посты</a>
+				<a href="/cgc" class="header-link ">CGC</a>
+			</div>
+			
+				<div class="social-icons">
+	<div class="left">
+		
+			<a class="icon icon_github" href="https://github.com/CSSSR" aria-label="GitHub"></a>
+		
+		<a class="icon icon_rss" href="/feed.xml" aria-label="RSS"></a>
+		
+			<a class="icon icon_twitter" href="https://twitter.com/csssr_dev" aria-label="Twitter"></a>
+		
+		
+			<a class="icon icon_envelope" href="mailto:hr@csssr.io" aria-label="Напишите нам"></a>
+		
+	</div>
+</div>
+
+			
+		</nav>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+
+		<div class="post p2 p-responsive wrap" role="main">
+			<div class="measure">
+				
+
+
+<div class="post-header mb2">
+	<h1>CSSSR Garbage Collector #20</h1>
+	<span class="post-meta">
+		Nov 29, 2017
+		
+			by <a target="_blank" class="post-author" rel="author" href="https://twitter.com/felix.exter">felix.exter</a>
+		
+	</span><br>
+	
+	<span class="post-meta small">1 minute read</span>
+</div>
+
+<article class="post-content">
+	
+<p><img src="/images/share/cgc-cover-20.jpg" alt="CSSSR Garbage Collector" /></p>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=3D4ChPUIqB4"><img src="/images/icons/youtube.png" alt="yt" /> Путешествие в Fantasy-land</a> — доклад от нашего комрада Егора</li>
+  <li><a href="https://www.youtube.com/watch?v=QoglUkN8d08&amp;list=PLEqoHzpnmTfD8ocGHDAMUfxTtchqSvrWn"><img src="/images/icons/youtube.png" alt="yt" /> Программирование на Idris. Лекция 1</a></li>
+  <li><a href="https://reactjs.org/blog/2017/11/28/react-v16.2.0-fragment-support.html">В React v16.2 улучшили поддержку для фрагментов</a><br />
+  Как было раньше:
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">const</span> <span class="nx">Fragment</span> <span class="o">=</span> <span class="p">({</span> <span class="nx">children</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="nx">children</span>
+
+  <span class="kd">const</span> <span class="nx">Component</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span>
+      <span class="o">&lt;</span><span class="nx">Fragment</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">A</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">B</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">C</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/Fragment</span><span class="err">&gt;
+</span></code></pre></div>    </div>
+    <p>или</p>
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">const</span> <span class="nx">Component</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">[</span>
+      <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">key</span><span class="o">=</span><span class="s1">'a'</span><span class="o">&gt;</span><span class="nx">A</span><span class="o">&lt;</span><span class="sr">/span&gt;</span><span class="err">,
+</span>      <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">key</span><span class="o">=</span><span class="s1">'b'</span><span class="o">&gt;</span><span class="nx">B</span><span class="o">&lt;</span><span class="sr">/span&gt;</span><span class="err">,
+</span>      <span class="o">&lt;</span><span class="nx">span</span> <span class="nx">key</span><span class="o">=</span><span class="s1">'c'</span><span class="o">&gt;</span><span class="nx">C</span><span class="o">&lt;</span><span class="sr">/span&gt;</span><span class="err">,
+</span>  <span class="p">]</span>
+</code></pre></div>    </div>
+    <p>Как можно теперь:</p>
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">Fragment</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'react'</span>
+
+  <span class="kd">const</span> <span class="nx">Component</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span>
+      <span class="o">&lt;</span><span class="nx">Fragment</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">A</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">B</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">C</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/Fragment</span><span class="err">&gt;
+</span></code></pre></div>    </div>
+    <p>или</p>
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">const</span> <span class="nx">Component</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span>
+      <span class="o">&lt;&gt;</span>
+          <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">A</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">B</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">C</span><span class="o">&lt;</span><span class="sr">/span</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/</span><span class="err">&gt;
+</span></code></pre></div>    </div>
+  </li>
+  <li><a href="https://building.calibreapp.com/debugging-react-performance-with-react-16-and-chrome-devtools-c90698a522ad"><img src="/images/icons/medium.png" alt="medium" /> Дебажим производительность с React 16 и Chrome DevTools</a></li>
+  <li><a href="https://frontendmasters.com/teachers/kyle-simpson/">Бесплатные лекции Кайла Симпсона — автора серии книг «You Don’t Know JS»</a></li>
+  <li><a href="https://egghead.io/courses/quickly-transform-data-with-transducers">Быстрая трансформация данных с помощью трансдьюсеров</a></li>
+  <li><a href="http://www.mockaroo.com/">Mockaroo</a> — онлайн генератор моки с любыми типами данных</li>
+  <li><a href="https://www.opennet.ru/docs/RUS/bash_scripting_guide/">Гид по программированию Bash-скриптов</a></li>
+</ul>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter25896539 = new Ya.Metrika({id:25896539,
+						webvisor:true,
+						clickmap:true,
+						trackLinks:true,
+						accurateTrackBounce:true});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/25896539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</body>
+</html>
