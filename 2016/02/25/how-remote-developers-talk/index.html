@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Правила общения удалённых разработчиков &#8211; CSSSR</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Учимся налаживать общение между разработчиками, решать проблемы быстрее и учиться это делать самостоятельно.">
+	<meta name="author" content="CSSSR">
+	<meta name="keywords" content="">
+	<link rel="canonical" href="/2016/02/25/how-remote-developers-talk/">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/css/main.css" type="text/css">
+
+	<!-- Open Graph -->
+	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Правила общения удалённых разработчиков">
+	<meta property="og:description" content="Учимся налаживать общение между разработчиками, решать проблемы быстрее и учиться это делать самостоятельно.">
+	<meta property="og:url" content="/2016/02/25/how-remote-developers-talk/">
+	<meta property="og:site_name" content="CSSSR">
+	<meta property="og:image" content="http://blog.csssr.ru/images/share/how-remote-developers-talk.jpg">
+
+	<!-- Icons -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<link sizes="57x57" href="/apple-touch-icon-57x57.png" rel="apple-touch-icon">
+	<link sizes="114x114" href="/apple-touch-icon-114x114.png" rel="apple-touch-icon">
+	<link sizes="72x72" href="/apple-touch-icon-72x72.png" rel="apple-touch-icon">
+	<link sizes="144x144" href="/apple-touch-icon-144x144.png" rel="apple-touch-icon">
+	<link sizes="60x60" href="/apple-touch-icon-60x60.png" rel="apple-touch-icon">
+	<link sizes="120x120" href="/apple-touch-icon-120x120.png" rel="apple-touch-icon">
+	<link sizes="76x76" href="/apple-touch-icon-76x76.png" rel="apple-touch-icon">
+	<link sizes="152x152" href="/apple-touch-icon-152x152.png" rel="apple-touch-icon">
+	<link sizes="180x180" href="/apple-touch-icon-180x180.png" rel="apple-touch-icon">
+	<link sizes="192x192" href="/favicon-192x192.png" rel="icon" type="image/png">
+	<link sizes="160x160" href="/favicon-160x160.png" rel="icon" type="image/png">
+	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
+	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
+	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
+	<meta name="application-name" content="Правила общения удалённых разработчиков">
+	<meta name="msapplication-tooltip" content="Учимся налаживать общение между разработчиками, решать проблемы быстрее и учиться это делать самостоятельно.">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/mstile-large.png">
+	<meta name="msapplication-starturl" content="/2016/02/25/how-remote-developers-talk/">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
+	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
+	<meta name="msapplication-wide310x150logo" content="/mstile-wide.png">
+	<meta name="msapplication-square310x310logo" content="/mstile-large.png">
+</head>
+
+<body class="">
+	<div class="site-wrap">
+		<header class="site-header px2 px-responsive">
+	<div class="wrap">
+		<div class="measure">
+			<a href="/" class="site-title"> </a>
+			
+				<div class="social-icons">
+	<div class="left">
+		
+			<a class="icon icon_github" href="https://github.com/CSSSR"></a>
+		
+		<a class="icon icon_rss" href="/feed.xml"></a>
+		
+			<a class="icon icon_twitter" href="https://twitter.com/csssr_dev"></a>
+		
+		
+			<a class="icon icon_envelope" href="mailto:hr@csssr.io"></a>
+		
+	</div>
+</div>
+			
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+		<div class="post p2 p-responsive wrap" role="main">
+			<div class="measure">
+				
+
+
+<div class="post-header mb2">
+	<h1>Правила общения удалённых разработчиков</h1>
+	<span class="post-meta">
+		Feb 25, 2016
+		
+	</span><br>
+	
+	<span class="post-meta small">5 minute read</span>
+</div>
+
+<article class="post-content">
+	<p><img src="/images/how-remote-developers-talk/intro.jpg" alt="Правила общения удалённых разработчиков" /></p>
+
+<blockquote>
+  <p>xxx [16:00:00]: привет!<br />
+xxx [16:01:01]: ты тут?<br />
+yyy [16:01:17]: привет, да<br />
+xxx [16:04:56]: не отвлекаю?<br />
+yyy [16:05:13]: нет<br />
+xxx [16:07:28]: отлично<br />
+xxx [16:08:01]: мне нужна твоя помощь.<br />
+xxx [16:09:29]: у меня не работает тут кое-что…<br />
+xxx [16:10:09]: сек<br />
+xxx [16:13:12]: сори, отходил<br />
+xxx [16:14:25]: ты тут?<br />
+yyy [16:14:30]: да</p>
+</blockquote>
+
+<p>Ничего не напоминает? Сколько раз у тебя был такой диалог? Очень эффективно, не правда ли?
+Так вот, сынок, если ты это читаешь и узнаёшь себя, то этот пост именно для тебя.
+С этого момента сразу сохрани его в закладки или в свой любимый сервис.
+Пусть настоится и потом когда-нибудь обязательно прочитай. Всё как обычно.</p>
+
+<p>Вся команда CSSSR работает полностью удалённо, и со временем мы поняли: чтобы эффективно общаться онлайн, нужны правила.
+Просто представь ситуацию в офисе: ты подходишь к сотруднику, который находится в потоке сознания и сосредоточенно что-то печатает.
+Приветствуешь и спрашиваешь: «Ты тут? Не занят?». Смешно, не правда ли?</p>
+
+<p>Мы решили составить базовые правила для эффективного удалённого общения и работы.</p>
+
+<h2 id="не-засоряй-эфир-дежурными-фразами">Не засоряй эфир дежурными фразами</h2>
+
+<p>Не пиши «Привет!» и не жди взаимного приветствия. Поверь, когда ты пишешь коллеге в личку, тебя уже рады видеть и слышать.
+Как-то неуважительно, скажешь ты? Но для удалённой работы это нормально: просто предупреди коллег,
+что в чате лучше сразу переходить к делу.
+«Ты тут?». Да, он там и ждёт твоего вопроса. А ты тем временем ждёшь его ответа. И вы играете в игру «кто кого переждёт».</p>
+
+<p>«Не занят?». Занят! У него всегда есть дела, ему дорого время. А тебе?</p>
+
+<p>«Не отвлекаю?». Обратился к человеку — ты уже его отвлёк. Смирись с этим.
+Плюс, ты не единственный — и кроме тебя в это же время ему могут писать другие ребята. Помни об этом.</p>
+
+<p>Тебе действительно важно получить ответы, которые ты уже знаешь, на все эти шаблонные вопросы,
+или всё таки хочешь решить свою проблему?</p>
+
+<p>Диалог должен иметь ценность. Прелюдии излишни, потому что для сути беседы они не важны.
+Если беседу нужно будет кому-то скопипастить и показать, то в ней будет куча мусора, которую приходится фильтровать.</p>
+
+<h2 id="давайте-пообщаемся-в-три-часа">Давайте пообщаемся <del>в три часа</del></h2>
+
+<p>Не нужно выжидать и действовать ровно по минутам. Инициируй обсуждение сразу, как появился повод для разговора.
+От того, что на твоих на часах в минутах будут нули, вопрос быстрее не решится.
+Если все участники беседы могут прямо сейчас, почему бы не начать сразу? Если не могут, они об этом скажут.</p>
+
+<p>Это, конечно, страшная глупость, но встречается удивительно часто.
+Наверное, остается после офисной работы с необходимостью бронировать корпоративную переговорку заранее.</p>
+
+<h2 id="сначала-сформулируй-потом-пиши">Сначала сформулируй, потом пиши</h2>
+
+<blockquote>
+  <p>У меня снова как в прошлый раз, кошмар какой-то…</p>
+</blockquote>
+
+<blockquote>
+  <p>Опять ничего не работает и ошибки появляются…</p>
+</blockquote>
+
+<p>Не подскажешь номер телефона для записи на курсы телепатии?</p>
+
+<p>Твой собеседник не должен гадать, какие у тебя проблемы.
+Последовательно расскажи о них сам! В словах должен быть заключён смысл.
+Рассказы о твоём личном отношении к проблеме прибереги для своего психолога.</p>
+
+<p>Постарайся уложиться в одно сообщение. Если предложений много, переноси их на новую строку.
+Длинные по ширине строки тяжело воспринимаются. Тебе это должно быть знакомым из редактора кода.</p>
+
+<p>Научись определять свою проблему. Максимум конкретики: в каком месте она возникает,
+как её воспроизвести — смотри в консоли, следи за терминалом, не забывай про сторонние модули и т.п.
+Если проблема сложная, разбей на составляющие.</p>
+
+<p><strong>… и пробуй решить проблему сам!</strong></p>
+
+<p>Серьёзно. Без шуток. Дебажить свой код (да и в целом — в любой профессии — находить
+и исправлять собственные косяки) должен уметь каждый, способов и инструментов для этого предостаточно.
+Если тот, кто помогает новичку, будет позволять себе всё время это делать за него, то новичок далеко не продвинется.
+Удалённая работа только вскрывает проблему: бесконечные диалоги — хуже самостоятельного решения.
+Да, спрашивать нужно, но не стоит этим злоупотреблять.</p>
+
+<h2 id="пользуйся-поиском">Пользуйся поиском</h2>
+
+<p>Казалось бы, без комментариев, но большинство новичков поиском не пользуются и сразу бегут в личку. Привей себе эту привычку.</p>
+
+<p><strong>… и пользуйся поиском правильно!</strong></p>
+
+<blockquote>
+  <p>xxx: всё обыскал, ничего не нашёл…</p>
+</blockquote>
+
+<p>Чаще всего, проделав то же самое за джуна, находишь ответ в первом же пункте из результатов поиска.
+Новичок жаждет длинных вопросов, на которые поисковик даст только больше мусорных результатов. А значит:</p>
+
+<ul>
+  <li>Сузь круг поиска: оставь только ключевые слова.
+Исключением могут быть ошибки из, например, консоли, содержащие сообщения с константами и кодами ошибок.</li>
+  <li>Если проблема в какой-либо библиотеке, попробуй сразу поискать в ишью репозитория этой библиотеки.</li>
+</ul>
+
+<h2 id="расскажи-о-своей-проблеме-утёнку">Расскажи о своей проблеме утёнку</h2>
+
+<p><img src="/images/how-remote-developers-talk/duck.jpg" alt="Метод утёнка" /></p>
+
+<p>Грамотно составленный вопрос содержит ключ к решению.</p>
+
+<p><strong>… так что используй <a href="https://ru.wikipedia.org/wiki/Метод_утёнка">Метод утёнка</a>!</strong></p>
+
+<blockquote>
+  <p>xxx: как сделать то-то?<br />
+…<br />
+xxx: решил проблему)</p>
+</blockquote>
+
+<p>Метод такой: поставь на стол игрушечного утёнка, которому ты будешь задавать вопросы как живому человеку.
+Правильная формулировка вопроса содержит как минимум половину ответа,
+а еще и даёт толчок мыслям, направляя их в нужное русло. Это точно сработает.
+Кстати, не забудь сообщить сразу же, как только решил проблему, если уже успел написать свой вопрос.
+Сам понимаешь, зачем.</p>
+
+<h2 id="отчаялся-спроси-у-всех-сразу">Отчаялся? Спроси у всех сразу</h2>
+
+<p>Шанс на успех увеличивается в несколько раз, когда задаёшь вопрос сообществу.
+У нас в Slack есть специальный канал для ревью и вопросов, возникающих при разработке,
+в котором тебе готов помочь коллективный разум. Это очень удобно, и гораздо лучше, чем донимать занятого коллегу в личке.
+Правила обращения к сообществу те же самые, что и для личного общения (см. 1 пункт).
+Если вопрос касается чего-то специфичного, можно обращаться к узкому кругу специалистов
+через <a href="http://blog.csssr.ru/2016/02/18/slack-groups/">группы в Slack</a>.</p>
+
+<h2 id="тестируй">Тестируй</h2>
+
+<p>Решить проблему не означает, что на этом можно закрыть задачу.
+Важно тестировать то, что ты накодил. Проводи тест-кейсы.
+Если ты умеешь писать тесты — отлично, используй их, прогоняй почаще и держи в актуальном состоянии.
+Не позволяй багам уходить мимо тебя к твоим коллегам и пользователям.
+Не надейся на тестировщика и тимлида. Лучше всех своё детище протестируешь только ты сам.</p>
+
+<h2 id="заключение">Заключение</h2>
+
+<p>Способность общаться конструктивно очень важна, и её нужно нарабатывать.
+Учись экономно расходовать время коллег и не превращай личную переписку в простыню на несколько десятков страниц.</p>
+
+<p>Итого:</p>
+
+<ul>
+  <li>Сначала погугли;</li>
+  <li>Обращаясь в личку, сразу избегай прелюдий;</li>
+  <li>Формулируй и задавай предметные вопросы;</li>
+  <li>Опиши формулировку и контекст задачи (как должно быть и как сейчас);</li>
+  <li>Перечисли, что ты уже пробовал делать;</li>
+  <li>Опиши результат (ошибки, непредсказуемое поведение и т.п.);</li>
+  <li>Желательно прикладывай сниппет и скриншот;</li>
+  <li>Если есть, где потестировать, покажи, где и как воспроизвести;</li>
+  <li>Обращайся к сообществу.</li>
+</ul>
+
+<p>Следуя советам из этого поста, ты станешь мастером удалённой коммуникации.</p>
+
+<p><a href="https://habrahabr.ru/post/298928/">Оригинальный пост на Habrahabr</a></p>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter25896539 = new Ya.Metrika({id:25896539,
+						webvisor:true,
+						clickmap:true,
+						trackLinks:true,
+						accurateTrackBounce:true});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/25896539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</body>
+</html>

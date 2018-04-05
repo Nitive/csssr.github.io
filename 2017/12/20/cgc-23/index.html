@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>CSSSR Garbage Collector #23 &#8211; CSSSR</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Новое в репозитории React, немного о DI и другие интересные ссылки из наших чатов">
+	<meta name="author" content="CSSSR">
+	<meta name="keywords" content="">
+	<link rel="canonical" href="/2017/12/20/cgc-23/">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/css/main.css" type="text/css">
+
+	<!-- Open Graph -->
+	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="CSSSR Garbage Collector #23">
+	<meta property="og:description" content="Новое в репозитории React, немного о DI и другие интересные ссылки из наших чатов">
+	<meta property="og:url" content="/2017/12/20/cgc-23/">
+	<meta property="og:site_name" content="CSSSR">
+	<meta property="og:image" content="http://blog.csssr.ru/images/share/cgc-cover-23.jpg">
+
+	<!-- Icons -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<link sizes="57x57" href="/apple-touch-icon-57x57.png" rel="apple-touch-icon">
+	<link sizes="114x114" href="/apple-touch-icon-114x114.png" rel="apple-touch-icon">
+	<link sizes="72x72" href="/apple-touch-icon-72x72.png" rel="apple-touch-icon">
+	<link sizes="144x144" href="/apple-touch-icon-144x144.png" rel="apple-touch-icon">
+	<link sizes="60x60" href="/apple-touch-icon-60x60.png" rel="apple-touch-icon">
+	<link sizes="120x120" href="/apple-touch-icon-120x120.png" rel="apple-touch-icon">
+	<link sizes="76x76" href="/apple-touch-icon-76x76.png" rel="apple-touch-icon">
+	<link sizes="152x152" href="/apple-touch-icon-152x152.png" rel="apple-touch-icon">
+	<link sizes="180x180" href="/apple-touch-icon-180x180.png" rel="apple-touch-icon">
+	<link sizes="192x192" href="/favicon-192x192.png" rel="icon" type="image/png">
+	<link sizes="160x160" href="/favicon-160x160.png" rel="icon" type="image/png">
+	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
+	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
+	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
+	<meta name="application-name" content="CSSSR Garbage Collector #23">
+	<meta name="msapplication-tooltip" content="Новое в репозитории React, немного о DI и другие интересные ссылки из наших чатов">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/mstile-large.png">
+	<meta name="msapplication-starturl" content="/2017/12/20/cgc-23/">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
+	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
+	<meta name="msapplication-wide310x150logo" content="/mstile-wide.png">
+	<meta name="msapplication-square310x310logo" content="/mstile-large.png">
+</head>
+
+<body class="">
+	<div class="site-wrap">
+		<header class="site-header px2 px-responsive">
+	<div class="wrap">
+		<div class="measure">
+			<a href="/" class="site-title"> </a>
+			
+				<div class="social-icons">
+	<div class="left">
+		
+			<a class="icon icon_github" href="https://github.com/CSSSR"></a>
+		
+		<a class="icon icon_rss" href="/feed.xml"></a>
+		
+			<a class="icon icon_twitter" href="https://twitter.com/csssr_dev"></a>
+		
+		
+			<a class="icon icon_envelope" href="mailto:hr@csssr.io"></a>
+		
+	</div>
+</div>
+			
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+		<div class="post p2 p-responsive wrap" role="main">
+			<div class="measure">
+				
+
+
+<div class="post-header mb2">
+	<h1>CSSSR Garbage Collector #23</h1>
+	<span class="post-meta">
+		Dec 20, 2017
+		
+			by <a target="_blank" class="post-author" rel="author" href="https://www.twitter.com/Vindizh">vindizh</a>
+		
+	</span><br>
+	
+	<span class="post-meta small">1 minute read</span>
+</div>
+
+<article class="post-content">
+	
+<p><img src="/images/share/cgc-cover-23.jpg" alt="CSSSR Garbage Collector" /></p>
+
+<ul>
+  <li><a href="https://github.com/nitin42/react-perf-devtool"><img src="/images/icons/github.png" alt="github" /> React Performance Devtool</a> — измеряй производительность React-приложений, не отходя от кассы</li>
+  <li><code class="highlighter-rouge">en</code> <a href="https://hackernoon.com/you-dont-need-to-know-dependency-injection-2e9d2ba1978a">Тебе не нужно знать «Dependency Injection»</a> — сложности перевода, или что такое «Dependency Injection» в современном фронтенде</li>
+  <li><code class="highlighter-rouge">en</code> <a href="https://typescriptcourses.com/typescript-fundamentals">Бесплатный курс по основам TypeScript</a> — встань на путь типизации</li>
+  <li><code class="highlighter-rouge">en</code> <a href="https://reactjs.org/blog/2017/12/15/improving-the-repository-infrastructure.html">За кулисами: улучшение инфраструктуры репозитория</a> — Дэн Абрамов и Брайан Вон рассказывают о новом в репозитории React: увлекательно, интересно и полезно</li>
+  <li><code class="highlighter-rouge">en</code> <a href="https://www.humblebundle.com/books/be-a-coder-books">Налетай на чтиво</a> — паки книг по самому разному программированию за смешные деньги, часть денег пойдёт на благотворительность</li>
+</ul>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter25896539 = new Ya.Metrika({id:25896539,
+						webvisor:true,
+						clickmap:true,
+						trackLinks:true,
+						accurateTrackBounce:true});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/25896539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</body>
+</html>
