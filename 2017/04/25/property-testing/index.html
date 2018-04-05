@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Какие ваши доказательства? &#8211; CSSSR</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Пробуем искать и проверять свойства программ при помощи генеративного тестирования">
+	<meta name="author" content="CSSSR">
+	<meta name="keywords" content="">
+	<link rel="canonical" href="/2017/04/25/property-testing/">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/css/main.css" type="text/css">
+
+	<!-- Open Graph -->
+	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Какие ваши доказательства?">
+	<meta property="og:description" content="Пробуем искать и проверять свойства программ при помощи генеративного тестирования">
+	<meta property="og:url" content="/2017/04/25/property-testing/">
+	<meta property="og:site_name" content="CSSSR">
+	
+
+	<!-- Icons -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<link sizes="57x57" href="/apple-touch-icon-57x57.png" rel="apple-touch-icon">
+	<link sizes="114x114" href="/apple-touch-icon-114x114.png" rel="apple-touch-icon">
+	<link sizes="72x72" href="/apple-touch-icon-72x72.png" rel="apple-touch-icon">
+	<link sizes="144x144" href="/apple-touch-icon-144x144.png" rel="apple-touch-icon">
+	<link sizes="60x60" href="/apple-touch-icon-60x60.png" rel="apple-touch-icon">
+	<link sizes="120x120" href="/apple-touch-icon-120x120.png" rel="apple-touch-icon">
+	<link sizes="76x76" href="/apple-touch-icon-76x76.png" rel="apple-touch-icon">
+	<link sizes="152x152" href="/apple-touch-icon-152x152.png" rel="apple-touch-icon">
+	<link sizes="180x180" href="/apple-touch-icon-180x180.png" rel="apple-touch-icon">
+	<link sizes="192x192" href="/favicon-192x192.png" rel="icon" type="image/png">
+	<link sizes="160x160" href="/favicon-160x160.png" rel="icon" type="image/png">
+	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
+	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
+	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
+	<meta name="application-name" content="Какие ваши доказательства?">
+	<meta name="msapplication-tooltip" content="Пробуем искать и проверять свойства программ при помощи генеративного тестирования">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/mstile-large.png">
+	<meta name="msapplication-starturl" content="/2017/04/25/property-testing/">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
+	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
+	<meta name="msapplication-wide310x150logo" content="/mstile-wide.png">
+	<meta name="msapplication-square310x310logo" content="/mstile-large.png">
+</head>
+
+<body class="">
+	<div class="site-wrap">
+		<header class="site-header px2 px-responsive">
+	<div class="wrap">
+		<div class="measure">
+			<a href="/" class="site-title"> </a>
+			
+				<div class="social-icons">
+	<div class="left">
+		
+			<a class="icon icon_github" href="https://github.com/CSSSR"></a>
+		
+		<a class="icon icon_rss" href="/feed.xml"></a>
+		
+			<a class="icon icon_twitter" href="https://twitter.com/csssr_dev"></a>
+		
+		
+			<a class="icon icon_envelope" href="mailto:hr@csssr.io"></a>
+		
+	</div>
+</div>
+			
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+		<div class="post p2 p-responsive wrap" role="main">
+			<div class="measure">
+				
+
+
+<div class="post-header mb2">
+	<h1>Какие ваши доказательства?</h1>
+	<span class="post-meta">
+		Apr 25, 2017
+		
+			by <a target="_blank" class="post-author" rel="author" href="https://twitter.com/bracketsarrows">bracketsarrows</a>
+		
+	</span><br>
+	
+	<span class="post-meta small">30 minute read</span>
+</div>
+
+<article class="post-content">
+	<p>Всем привет. Меня зовут Андрей, и сегодня я хотел бы обсудить тему оценки и доказательства свойств программных решений.</p>
+
+<p>В чем состоит задача программиста? Один из самых популярных ответов – предоставлять некоторое решение существующей проблемы. Неотъемлемой частью этого процесса является стадия анализа разработанного решения, в которой мы пытаемся понять, что за решение мы получили, какие у него ограничения, область применения, и на какие компромиссы оно идет, то есть насколько хорошо оно решает изначальную проблему и сколько других проблем добавляет.</p>
+
+<p>На сегодняшний день большая часть анализа протекает в неформальных терминах: «это ненадежное решение», «это плохо читаемый код», «плохо тестируется» и так далее. Для формального анализа в большинстве случаев мы используем различные виды тестов, основанные на тест-кейсах. Неформальный анализ нас сейчас не интересует, так как он имеет большее отношение к философии и софистике, нежели к точным наукам. Поэтому давайте сконцентрируемся на тестировании, взглянув на него именно с точки зрения точной науки, то есть математики.</p>
+
+<p>Математики, как и программисты, создают решения и анализируют их. Возьмем для примера анализ функций (они ближе всего к программам). Что такое тест-кейс с точки зрения анализа функции? Это некоторая точка (входное значение) функции. Сам же тест, соответственно, представляет собой анализ поведения функции в этой точке (причем, точки обычно выбираются не случайно, а на разных участках с разным поведением функции – для этого, как правило, используется информация по покрытию кода).</p>
+
+<p>Исследование поведения функции в некоторых важных точках – неотъемлемая часть математического анализа. Однако математики также уделяют много времени анализу свойств, справедливых на всей области определения, например, <a target="_blank" href="https://ru.wikipedia.org/wiki/%D0%A1%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5_(%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0)">функция сложения ассоциативна, коммутативна и так далее</a>.</p>
+
+<p><img src="/images/property-testing/func_analyze.png" alt="Анализ функции" /></p>
+
+<p>Программы, как и математические функции, в большинстве случаев определены на очень большом числе значений (близком к бесконечному). Но программисты по какой-то причине не интересуются свойствами своих программ за пределами конкретных точек (тест-кейсов). Получается, что о поведении программы в остальных точках мы не можем сказать ничего определенного. Как это исправить?</p>
+
+<h3 id="простой-пример">Простой пример</h3>
+
+<p>Давайте рассмотрим для начала пример, взятый из базовой арифметики, а потом перейдем к более практической ситуации. Возьмем обыкновенное сложение. Как я уже упоминал, сложение обладает многими свойствами. К примеру, сумма двух неотрицательных чисел всегда больше каждого из слагаемых.</p>
+
+<p>То есть, для любых <code class="highlighter-rouge">a</code> и <code class="highlighter-rouge">b</code> больших или равных нулю справедливо <code class="highlighter-rouge">a + b &gt;= a &amp;&amp; a + b &gt;= b</code>. На Javascript данное свойство можно записать в качестве функции:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">&gt;=</span> <span class="nx">a</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">&gt;=</span> <span class="nx">b</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Осталось только доказать это свойство. Какие у нас есть варианты:</p>
+
+<ul>
+  <li>Пойти математическим путем – обложиться Coq/Agda/TLA+/Lean Prover и другими штуками для доказательства теорем, и через пару лет мы, возможно, сможем проверить это свойство.</li>
+  <li>Как и всегда в программировании, мы можем, в отличии от математиков, чуть-чуть срезать углы и просто проверить это свойство очень много раз на разных значениях.</li>
+</ul>
+
+<p>Сделать это довольно просто. Для начала напишем генератор необходимых значений:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">genPosNumber</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">10000000000</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Затем напишем функцию, которая принимает генератор и свойство и конструирует проверку свойства:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">property</span><span class="p">(</span><span class="nx">argGenerators</span><span class="p">,</span> <span class="nx">propertyFn</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">generatedArgs</span> <span class="o">=</span> <span class="nx">argGenerators</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">gen</span> <span class="o">=&gt;</span> <span class="nx">gen</span><span class="p">());</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">success</span><span class="p">:</span> <span class="nx">propertyFn</span><span class="p">(...</span><span class="nx">generatedArgs</span><span class="p">),</span>
+      <span class="na">args</span><span class="p">:</span> <span class="nx">generatedArgs</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Ну и саму функцию, которая будет проверять свойство заданое количество раз (по умолчанию 100):</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">check</span><span class="p">(</span><span class="nx">property</span><span class="p">,</span> <span class="nx">tries</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">tries</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">property</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">res</span><span class="p">.</span><span class="nx">success</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span>
+        <span class="s1">'Property hasnt held on arguments: '</span>
+        <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">args</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Теперь мы можем написать тест на наше свойство:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'forall a, b - a + b &gt;= a &amp;&amp; a + b &gt;= b'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">check</span><span class="p">(</span><span class="nx">property</span><span class="p">(</span>
+    <span class="p">[</span><span class="nx">genPosNumber</span><span class="p">,</span> <span class="nx">genPosNumber</span><span class="p">],</span>
+    <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">&gt;=</span> <span class="nx">a</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">&gt;=</span> <span class="nx">b</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">))</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>Возникает вопрос: а надо ли было что-то писать, или все уже написано до нас? Ответ – да, все уже написано.</p>
+
+<p>Данный подход называется property-based testing (а.к.a QuickCheck тесты, property тесты, генеративное тестирование), появился он в <a target="_blank" href="http://www.eecs.northwestern.edu/~robby/courses/395-495-2009-fall/quick.pdf">haskell сообществе</a>. На сегодняшний день его реализации есть практически для всех языков и, конечно же, для Javascript. В примерах я буду использовать встроенный в <a target="_blank" href="https://facebook.github.io/jest/">Jest</a> <a target="_blank" href="https://github.com/leebyron/testcheck-js">testcheck-js</a>, который на самом деле является биндингом к <a target="_blank" href="https://github.com/clojure/test.check">test.check написанному на ClojureScript</a>. Наш пример с его использованием запишется так:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">testcheck</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'testcheck'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">gen</span> <span class="o">=</span> <span class="nx">testcheck</span><span class="p">.</span><span class="nx">gen</span><span class="p">;</span>
+
+<span class="nx">it</span><span class="p">(</span><span class="s1">'forall a, b - a + b &gt;= a &amp;&amp; a + b &gt;= b'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">testcheck</span><span class="p">.</span><span class="nx">check</span><span class="p">(</span><span class="nx">testcheck</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span>
+    <span class="p">[</span><span class="nx">gen</span><span class="p">.</span><span class="nx">posInt</span><span class="p">,</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">posInt</span><span class="p">],</span>
+    <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">&gt;=</span> <span class="nx">a</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">&gt;=</span> <span class="nx">b</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">))</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>В целом, практически ничего не изменилось, кроме использования уже готовых функций и генераторов вместо самописных. Перейдем к примеру посложнее.</p>
+
+<h3 id="пример-посложнее">Пример посложнее</h3>
+
+<p>Фронтенд почти всегда оперирует сущностями, которые были переданы нам с бекенда, и зачастую для более удобного применения на фронтенде нам надо изменить их структуру. Тут все просто – у нас появляется некоторая функция <code class="highlighter-rouge">convertFrom</code>, которая конвертирует структуру (допустим, данные о семье) в удобную для отображения.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">convertFrom</span><span class="p">(</span><span class="nx">structFromBackend</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="k">return</span> <span class="nx">structForFrontend</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Однако некоторые сущности не только отображаются, но и редактируются – тогда нам надо добавить также функцию <code class="highlighter-rouge">convertTo</code>. Она переведет структуру из представления фронтенда в исходную, которую мы сможем сохранить на бекенде.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">convertTo</span><span class="p">(</span><span class="nx">structForFrontend</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="k">return</span> <span class="nx">structFromBackend</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Наверное, вы уже заметили некоторое свойство этих двух функций: <code class="highlighter-rouge">convertTo</code> – обратная функция для <code class="highlighter-rouge">convertFrom</code>. То есть для любых <code class="highlighter-rouge">a</code> справедливо, что <code class="highlighter-rouge">convertFrom(convertTo(a))</code> эквивалентно <code class="highlighter-rouge">a</code>.
+Давайте запишем это свойство на Javascript:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">isRevertable</span><span class="p">(</span><span class="nx">structFromBackend</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">structForFrontend</span> <span class="o">=</span> <span class="nx">convertFrom</span><span class="p">(</span><span class="nx">structFromBackend</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">structForBackend</span> <span class="o">=</span> <span class="nx">convertTo</span><span class="p">(</span><span class="nx">structForFrontend</span><span class="p">);</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">structFromBackend</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">structForBackend</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Теперь необходимо написать генератор для <code class="highlighter-rouge">structFromBackend</code>. <code class="highlighter-rouge">Testcheck</code> уже имеет большой набор встроенных генераторов, комбинируя которые, мы можем получать новые генераторы. Пример:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">gen</span><span class="p">.</span><span class="kr">int</span> <span class="c1">// генератор целых чисел</span>
+<span class="nx">gen</span><span class="p">.</span><span class="nx">array</span> <span class="c1">// генератор массивов</span>
+<span class="nx">gen</span><span class="p">.</span><span class="nx">array</span><span class="p">(</span><span class="nx">gen</span><span class="p">.</span><span class="kr">int</span><span class="p">)</span> <span class="c1">// генератор массивов целых чисел</span>
+</code></pre></div></div>
+<p>Из чего состоит наша структура (данные о семье):</p>
+
+<ul>
+  <li><code class="highlighter-rouge">type</code> – может быть <code class="highlighter-rouge">espoused</code>, <code class="highlighter-rouge">single</code>, <code class="highlighter-rouge">common_law_marriage</code>, <code class="highlighter-rouge">undefined</code>;</li>
+  <li><code class="highlighter-rouge">members</code> – массив объектов с такой структурой:
+    <ul>
+      <li><code class="highlighter-rouge">role</code> – может быть <code class="highlighter-rouge">sibling</code>, <code class="highlighter-rouge">child</code>, <code class="highlighter-rouge">parent</code>, <code class="highlighter-rouge">spouse</code>;</li>
+      <li><code class="highlighter-rouge">fio</code> – объект с ключами <code class="highlighter-rouge">firstname</code>, <code class="highlighter-rouge">lastname</code>, <code class="highlighter-rouge">middlename</code>;</li>
+      <li><code class="highlighter-rouge">dependant</code> – <code class="highlighter-rouge">boolean</code> или <code class="highlighter-rouge">undefined</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Начнем с <code class="highlighter-rouge">type</code>, воспользуемся <a target="_blank" href="https://github.com/leebyron/testcheck-js/blob/master/type-definitions/testcheck.d.ts#L113">документацией по генераторам</a>.
+Для перечислений используется генератор <a target="_blank" href="https://github.com/leebyron/testcheck-js/blob/master/type-definitions/testcheck.d.ts#L234">returnOneOf</a>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">gen</span><span class="p">.</span><span class="nx">returnOneOf</span><span class="p">([</span><span class="s1">'espoused'</span><span class="p">,</span> <span class="s1">'single'</span><span class="p">,</span> <span class="s1">'common_law_marriage'</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">])</span>
+</code></pre></div></div>
+<p>Теперь самое сложное – генератор объекта <code class="highlighter-rouge">member</code>. Генератор для <code class="highlighter-rouge">role</code> сконструируем с помощью уже использованного <code class="highlighter-rouge">returnOneOf</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">gen</span><span class="p">.</span><span class="nx">returnOneOf</span><span class="p">([</span><span class="s1">'sibling'</span><span class="p">,</span> <span class="s1">'child'</span><span class="p">,</span> <span class="s1">'parent'</span><span class="p">,</span> <span class="s1">'spouse'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>Для <code class="highlighter-rouge">dependant</code> используем генераторы <a target="_blank" href="https://github.com/leebyron/testcheck-js/blob/master/type-definitions/testcheck.d.ts#L331">gen.boolean</a>, <a target="_blank" href="https://github.com/leebyron/testcheck-js/blob/master/type-definitions/testcheck.d.ts#L329">gen.undefined</a>, скомбинировав их при помощи <a target="_blank" href="https://github.com/leebyron/testcheck-js/blob/master/type-definitions/testcheck.d.ts#L208">gen.oneOf</a>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// oneOf принимает несколько генераторов и возврашается генератор который</span>
+<span class="c1">// случайным образом использует то один то другой генератор</span>
+<span class="nx">gen</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="nx">gen</span><span class="p">.</span><span class="kr">boolean</span><span class="p">,</span> <span class="nx">gen</span><span class="p">.</span><span class="kc">undefined</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>Для <code class="highlighter-rouge">fio</code> используем <a target="_blank" href="https://github.com/leebyron/testcheck-js/blob/master/type-definitions/testcheck.d.ts#L297">gen.object</a> в комбинации с <a target="_blank" href="https://github.com/leebyron/testcheck-js/blob/master/type-definitions/testcheck.d.ts#L383">gen.string</a>, <a target="_blank" href="https://github.com/leebyron/testcheck-js/blob/master/type-definitions/testcheck.d.ts#L329">gen.undefined</a>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">gen</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+    <span class="na">firstname</span><span class="p">:</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="nx">gen</span><span class="p">.</span><span class="nx">string</span><span class="p">,</span> <span class="nx">gen</span><span class="p">.</span><span class="kc">undefined</span><span class="p">]),</span>
+    <span class="na">lastname</span><span class="p">:</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="nx">gen</span><span class="p">.</span><span class="nx">string</span><span class="p">,</span> <span class="nx">gen</span><span class="p">.</span><span class="kc">undefined</span><span class="p">]),</span>
+    <span class="na">middlename</span><span class="p">:</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="nx">gen</span><span class="p">.</span><span class="nx">string</span><span class="p">,</span> <span class="nx">gen</span><span class="p">.</span><span class="kc">undefined</span><span class="p">])</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>Сведем все вместе:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">familyInfoGen</span> <span class="o">=</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+  <span class="na">type</span><span class="p">:</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">returnOneOf</span><span class="p">([</span><span class="s1">'espoused'</span><span class="p">,</span> <span class="s1">'single'</span><span class="p">,</span> <span class="s1">'common_law_marriage'</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">]),</span>
+  <span class="na">members</span><span class="p">:</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">array</span><span class="p">(</span>
+    <span class="nx">gen</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+      <span class="na">role</span><span class="p">:</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">returnOneOf</span><span class="p">([</span><span class="s1">'sibling'</span><span class="p">,</span> <span class="s1">'child'</span><span class="p">,</span> <span class="s1">'parent'</span><span class="p">,</span> <span class="s1">'spouse'</span><span class="p">]),</span>
+      <span class="na">fio</span><span class="p">:</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+        <span class="na">firstname</span><span class="p">:</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="nx">gen</span><span class="p">.</span><span class="nx">string</span><span class="p">,</span> <span class="nx">gen</span><span class="p">.</span><span class="kc">undefined</span><span class="p">]),</span>
+        <span class="na">lastname</span><span class="p">:</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="nx">gen</span><span class="p">.</span><span class="nx">string</span><span class="p">,</span> <span class="nx">gen</span><span class="p">.</span><span class="kc">undefined</span><span class="p">]),</span>
+        <span class="na">middlename</span><span class="p">:</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="nx">gen</span><span class="p">.</span><span class="nx">string</span><span class="p">,</span> <span class="nx">gen</span><span class="p">.</span><span class="kc">undefined</span><span class="p">])</span>
+      <span class="p">}),</span>
+      <span class="na">dependant</span><span class="p">:</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="nx">gen</span><span class="p">.</span><span class="kr">boolean</span><span class="p">,</span> <span class="nx">gen</span><span class="p">.</span><span class="kc">undefined</span><span class="p">])</span>
+    <span class="p">})</span>
+  <span class="p">)</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Проверяем:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">sample</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'testcheck'</span><span class="p">).</span><span class="nx">sample</span><span class="p">;</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">sample</span><span class="p">(</span><span class="nx">familyInfoGen</span><span class="p">,</span> <span class="p">{</span><span class="na">times</span><span class="p">:</span> <span class="mi">2</span><span class="p">}),</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="cm">/*
+[
+  {
+    "type": "espoused",
+    "members": []
+  },
+  {
+    "members": []
+  }
+]
+*/</span>
+</code></pre></div></div>
+<p>А вот и первая проблема. Иногда у нас генерятся структуры без супруги, но при этом с <code class="highlighter-rouge">type === 'espoused'</code>. Так быть не может – нам не могут прийти такие данные с бекенда. Как можно ограничить или преобразовать нашу генерируемую последовательность по какому-то правилу? Варианта два:</p>
+
+<ul>
+  <li><a target="_blank" href="https://github.com/leebyron/testcheck-js/blob/master/type-definitions/testcheck.d.ts#L125">suchThat</a> — фильтрует генерируемую последовательность по предикату. Не очень подходит, так как увеличивает число попыток генерации, что замедляет тесты;</li>
+  <li><a target="_blank" href="https://github.com/leebyron/testcheck-js/blob/master/type-definitions/testcheck.d.ts#L146">map</a> — отображает элементы генерируемой последовательности согласно некоторой функции.</li>
+</ul>
+
+<p>Давайте посмотрим, как мы можем применить <code class="highlighter-rouge">map</code> для наших целей. Для начала определимся с правилами:</p>
+
+<ul>
+  <li>Супруга может быть только одна;</li>
+  <li>Если она есть, то <code class="highlighter-rouge">type === 'espoused'</code>;</li>
+  <li>Если <code class="highlighter-rouge">type !== 'espoused'</code>, то ее быть не должно.</li>
+</ul>
+
+<p>Так и запишем:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFamily</span><span class="p">(</span><span class="nx">familyObject</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// находим всех супруг</span>
+  <span class="kd">var</span> <span class="nx">spouse</span> <span class="o">=</span> <span class="nx">familyObject</span><span class="p">.</span><span class="nx">members</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">member</span> <span class="o">=&gt;</span> <span class="nx">member</span><span class="p">.</span><span class="nx">role</span> <span class="o">===</span> <span class="s1">'spouse'</span><span class="p">);</span>
+  <span class="c1">// если женат, а супруги нет</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">familyObject</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s1">'espoused'</span> <span class="o">&amp;&amp;</span> <span class="nx">spouse</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">type</span><span class="p">:</span> <span class="nx">familyObject</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span>
+      <span class="na">members</span><span class="p">:</span> <span class="p">[</span>
+        <span class="c1">// то добавляем ее</span>
+        <span class="p">{</span> <span class="na">role</span><span class="p">:</span> <span class="s1">'spouse'</span><span class="p">,</span> <span class="na">fio</span><span class="p">:</span> <span class="p">{}</span> <span class="p">},</span>
+        <span class="p">...</span><span class="nx">familyObject</span><span class="p">.</span><span class="nx">members</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="c1">// если не женат, а супруга есть</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">familyObject</span><span class="p">.</span><span class="nx">type</span> <span class="o">!==</span> <span class="s1">'espoused'</span> <span class="o">&amp;&amp;</span> <span class="nx">spouse</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">type</span><span class="p">:</span> <span class="nx">familyObject</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span>
+      <span class="c1">// убираем ее</span>
+      <span class="na">members</span><span class="p">:</span> <span class="nx">familyObject</span><span class="p">.</span><span class="nx">members</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">member</span> <span class="o">=&gt;</span> <span class="nx">member</span><span class="p">.</span><span class="nx">role</span> <span class="o">!==</span> <span class="s1">'spouse'</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="c1">// если супруг больше одной, то оставляем только первую</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">spouse</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">type</span><span class="p">:</span> <span class="nx">familyObject</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span>
+      <span class="na">members</span><span class="p">:</span> <span class="nx">familyObject</span><span class="p">.</span><span class="nx">members</span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">member</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">member</span><span class="p">.</span><span class="nx">role</span> <span class="o">!==</span> <span class="s1">'spouse'</span> <span class="o">&amp;&amp;</span> <span class="nx">acc</span><span class="p">.</span><span class="nx">hasSpouse</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">acc</span><span class="p">.</span><span class="nx">members</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">member</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">member</span><span class="p">.</span><span class="nx">role</span> <span class="o">===</span> <span class="s1">'spouse'</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">acc</span><span class="p">.</span><span class="nx">hasSpouse</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">acc</span><span class="p">.</span><span class="nx">members</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">member</span><span class="p">);</span>
+          <span class="nx">acc</span><span class="p">.</span><span class="nx">hasSpouse</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+      <span class="p">},</span> <span class="p">{</span> <span class="na">members</span><span class="p">:</span> <span class="p">[],</span> <span class="na">hasSpouse</span><span class="p">:</span> <span class="kc">false</span> <span class="p">}).</span><span class="nx">members</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="c1">// если структура верна, то возвращаем, ничего не меняя</span>
+  <span class="k">return</span> <span class="nx">familyObject</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Применим эту операцию к нашему генератору:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">familyInfoGenFixed</span> <span class="o">=</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">mapFamily</span><span class="p">,</span> <span class="nx">familyInfoGen</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Проверяем:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">sample</span><span class="p">(</span><span class="nx">familyInfoGenFixed</span><span class="p">,</span> <span class="p">{</span><span class="na">times</span><span class="p">:</span> <span class="mi">2</span><span class="p">}),</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="cm">/*
+[
+  {
+    "type": "espoused",
+    "members": [
+      {
+        "role": "spouse",
+        "fio": {}
+      }
+    ]
+  },
+  {
+    "type": "common_law_marriage",
+    "members": [
+      {
+        "role": "child",
+        "fio": {
+          "firstname": "&amp;",
+          "lastname": "",
+        }
+      }
+    ]
+  }
+]
+*/</span>
+</code></pre></div></div>
+
+<p>Теперь генерируемые объекты точно соответствуют нашим требованиям – можно переходить непосредственно к проверке нашего свойства. Воспользуемся хелпером из пакета <code class="highlighter-rouge">jasmine-check</code> <code class="highlighter-rouge">check.it</code> – он принимает описания свойства, массив генераторов и свойство в виде функции.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">require</span><span class="p">(</span><span class="s1">'jasmine-check'</span><span class="p">).</span><span class="nx">install</span><span class="p">();</span>
+
+<span class="nx">check</span><span class="p">.</span><span class="nx">it</span><span class="p">(</span>
+  <span class="s1">'convertTo is revert function for convertFrom'</span><span class="p">,</span>
+  <span class="p">[</span><span class="nx">familyInfoGenFixed</span><span class="p">],</span>
+  <span class="nx">isRevertable</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>Однако проверка нашего свойства заканчивается безуспешно:</p>
+
+<div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code>● convertFrom and convertTo properties
+  › convertFrom -&gt; convertTo save original shape (
+    {"type":"single","members":[{"role": "sibling", "fio": {}}]}
+  )
+
+expect(received).toEqual(expected)
+
+Expected value to equal:
+  {"type":"single","members": Array [
+    {"role": "sibling", "fio": Object {}}
+  ]}
+Received:
+  {"type":"single","members": Array [
+    {"role": "sibling", "fio": Object {}, "dependant": false}
+  ]}
+
+Difference:
+
+<span class="gd">- Expected
+</span><span class="gi">+ Received
+</span>
+  Object {
+    "type":"single"
+    "members": Array [
+      Object {
+        "role": "sibling",
+        "fio": Object {},
+<span class="gi">+       "dependant": false
+</span>      }
+    ]
+  }
+</code></pre></div></div>
+
+<p>Все дело в том, что функция <code class="highlighter-rouge">convertFrom</code>, помимо преобразований из одной структуры в другую, также проставляет некоторые значения по умолчанию (для <code class="highlighter-rouge">dependant</code> это <code class="highlighter-rouge">false</code>), то есть она не оставляет исходные значения. Что же делать?</p>
+
+<h3 id="решение-1--сложное">Решение №1 — сложное</h3>
+
+<p><code class="highlighter-rouge">
+Note: дальше будет много кода, написаного на коленке в течение короткого промежутка времени в качестве Proof of concept. Данный код представлен только для того, чтобы показать некоторую идею, а не быть готовым для реального применения.
+</code></p>
+
+<p>Первое, что приходит в голову – да, сами значения меняются, но структура-то остается прежней.
+Следовательно, мы можем ослабить свойство и проверять не на точное равенство, а на то, что структура не изменяется:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">isSameShape</span><span class="p">(</span><span class="nx">structFromBackend</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">structForFrontend</span> <span class="o">=</span> <span class="nx">convertFrom</span><span class="p">(</span><span class="nx">structFromBackend</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">structForBackend</span> <span class="o">=</span> <span class="nx">convertTo</span><span class="p">(</span><span class="nx">structForFrontend</span><span class="p">);</span>
+
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">checkFamilyStruct</span><span class="p">(</span><span class="nx">structForBackend</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Осталось только написать функцию <code class="highlighter-rouge">checkFamilyStruct</code>.</p>
+
+<p>Хм, а если подумать? Вспомните, ведь мы уже описывали структуру наших данных. В генераторе мы описали и типы, и различные ограничения для нашей структуры (в <code class="highlighter-rouge">mapFamily</code>). Можем ли мы как-то переиспользовать создание нашего генератора для проверки структуры результата? Скорее всего, нет. Для этого понадобится анализировать внутреннюю структуру генератора, а она довольно непростая (так как он сам написан на ClojureScript).</p>
+
+<p>Однако мы можем сделать то, что так любят делать программисты – придумать новое API определения структуры данных, при помощи которого мы сможем получать и функцию-генератор, и функцию-валидатор. И давайте сделаем его похожим на <a target="_blank" href="https://facebook.github.io/react/docs/typechecking-with-proptypes.html">React.PropTypes</a>, ведь все мы так любим React.</p>
+
+<p>Единственным новым методом будет <code class="highlighter-rouge">.invariant</code>, который будет отвечать за преобразование генерируемой последовательности (вспоминаем метод <code class="highlighter-rouge">.map</code>).</p>
+
+<p>Использование нашего API должно выглядеть так:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">makeFamilySpec</span> <span class="o">=</span> <span class="nx">spec</span> <span class="o">=&gt;</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">shape</span><span class="p">({</span>
+  <span class="na">type</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="s1">'espoused'</span><span class="p">,</span> <span class="s1">'single'</span><span class="p">,</span> <span class="s1">'common_law_marriage'</span><span class="p">]),</span>
+  <span class="na">members</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">arrayOf</span><span class="p">(</span>
+    <span class="nx">spec</span><span class="p">.</span><span class="nx">shape</span><span class="p">({</span>
+      <span class="na">role</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="s1">'sibling'</span><span class="p">,</span> <span class="s1">'child'</span><span class="p">,</span> <span class="s1">'parent'</span><span class="p">,</span> <span class="s1">'spouse'</span><span class="p">]).</span><span class="nx">isRequired</span><span class="p">,</span>
+      <span class="na">fio</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">shape</span><span class="p">({</span>
+        <span class="na">firstname</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">string</span><span class="p">,</span>
+        <span class="na">lastname</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">string</span><span class="p">,</span>
+        <span class="na">middlename</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">string</span>
+      <span class="p">}),</span>
+      <span class="na">dependant</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">bool</span>
+    <span class="p">}).</span><span class="nx">isRequired</span>
+  <span class="p">)</span>
+<span class="p">}).</span><span class="nx">invariant</span><span class="p">(</span><span class="nx">mapFamily</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Соответственно, теперь нам надо определить объект <code class="highlighter-rouge">spec</code> для валидатора и для генератора. Для валидации я буду использовать <a target="_blank" href="https://facebook.github.io/jest/docs/api.html#expectvalue)">expect</a> из Jest просто потому, что это единственное, что было под рукой. Очевидно, что для валидации можно использовать любую библиотеку для проверки данных, да и сам формат описания структуры может быть любым.</p>
+
+<p>Для начала определим общую структуру API для валидатора:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">jestSpec</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="c1">// specJest просто некоторая обертка, которая добавит все необходимые методы</span>
+  <span class="na">string</span><span class="p">:</span> <span class="nx">specJest</span><span class="p">(</span>
+    <span class="nx">actual</span> <span class="o">=&gt;</span> <span class="nx">expect</span><span class="p">(</span><span class="nx">isString</span><span class="p">(</span><span class="nx">actual</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+  <span class="p">),</span> <span class="c1">// для примитивов проверяем просто типы</span>
+  <span class="na">bool</span><span class="p">:</span> <span class="nx">specJest</span><span class="p">(</span>
+    <span class="nx">actual</span> <span class="o">=&gt;</span> <span class="nx">expect</span><span class="p">(</span><span class="nx">isBoolean</span><span class="p">(</span><span class="nx">actual</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+  <span class="p">),</span>
+  <span class="na">oneOf</span><span class="p">:</span> <span class="nx">list</span> <span class="o">=&gt;</span> <span class="nx">specJest</span><span class="p">(</span>
+    <span class="nx">actual</span> <span class="o">=&gt;</span> <span class="nx">expect</span><span class="p">(</span><span class="nx">list</span><span class="p">).</span><span class="nx">toContainEqual</span><span class="p">(</span><span class="nx">actual</span><span class="p">)</span>
+  <span class="p">),</span>
+  <span class="na">shape</span><span class="p">:</span> <span class="nx">shape</span> <span class="o">=&gt;</span> <span class="nx">specJest</span><span class="p">(</span><span class="nx">actual</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">isPlainObject</span><span class="p">(</span><span class="nx">actual</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="nx">keys</span><span class="p">(</span><span class="nx">shape</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">key</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">// для объекта проверяем, что все ключи соответствуют описаниям</span>
+      <span class="nx">shape</span><span class="p">[</span><span class="nx">key</span><span class="p">](</span><span class="nx">actual</span><span class="p">[</span><span class="nx">key</span><span class="p">]);</span>
+    <span class="p">});</span>
+  <span class="p">}),</span>
+  <span class="na">arrayOf</span><span class="p">:</span> <span class="nx">itemSpec</span> <span class="o">=&gt;</span> <span class="nx">specJest</span><span class="p">(</span><span class="nx">actual</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">actual</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="c1">// для массива проверяем элементы, которые содержатся в нем</span>
+    <span class="nx">actual</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="nx">itemSpec</span><span class="p">(</span><span class="nx">item</span><span class="p">));</span>
+  <span class="p">})</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Теперь давайте сделаем то же самое для генератора:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">genSpec</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="c1">// specGen просто некоторая обертка, которая добавит все необходимые методы</span>
+  <span class="na">string</span><span class="p">:</span> <span class="nx">specGen</span><span class="p">(</span><span class="nx">gen</span><span class="p">.</span><span class="nx">asciiString</span><span class="p">),</span>
+  <span class="na">bool</span><span class="p">:</span> <span class="nx">specGen</span><span class="p">(</span><span class="nx">gen</span><span class="p">.</span><span class="kr">boolean</span><span class="p">),</span>
+  <span class="na">oneOf</span><span class="p">:</span> <span class="nx">list</span> <span class="o">=&gt;</span> <span class="nx">specGen</span><span class="p">(</span><span class="nx">gen</span><span class="p">.</span><span class="nx">returnOneOf</span><span class="p">(</span><span class="nx">list</span><span class="p">)),</span>
+  <span class="na">shape</span><span class="p">:</span> <span class="nx">shape</span> <span class="o">=&gt;</span> <span class="nx">specGen</span><span class="p">(</span><span class="nx">gen</span><span class="p">.</span><span class="nx">object</span><span class="p">(</span><span class="nx">shape</span><span class="p">)),</span>
+  <span class="na">arrayOf</span><span class="p">:</span> <span class="nx">itemSpec</span> <span class="o">=&gt;</span> <span class="nx">specGen</span><span class="p">(</span><span class="nx">gen</span><span class="p">.</span><span class="nx">array</span><span class="p">(</span><span class="nx">itemSpec</span><span class="p">))</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Далее необходимо реализовать сами обертки, которые будут добавлять необходимые методы. Так как большая часть кода и для валидатора, и для генератора будет общей – вынесем ее в функцию <code class="highlighter-rouge">makeSpecable</code>. Она будет принимать 2 функции, которые уже будут содержать логику, специфичную для генератора или валидатора:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">makeNotRequired</code> — определит, как сделать из того, что нам передали, необязательный генератор/валидатор.</li>
+</ul>
+
+<p>Здесь все довольно просто. Для валидатора:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">check</span> <span class="o">=&gt;</span> <span class="nx">actual</span> <span class="o">=&gt;</span> <span class="nx">isUndefined</span><span class="p">(</span><span class="nx">actual</span><span class="p">)</span> <span class="o">||</span> <span class="nx">check</span><span class="p">(</span><span class="nx">actual</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Для генератора:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">generator</span> <span class="o">=&gt;</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="nx">gen</span><span class="p">.</span><span class="kc">undefined</span><span class="p">,</span> <span class="nx">generator</span><span class="p">])</span>
+</code></pre></div></div>
+<ul>
+  <li><code class="highlighter-rouge">makeInvariant</code> — определит как добавить ограничение по некоторой кастомной функции для генератора/валидатора</li>
+</ul>
+
+<p>Для генератора мы такое уже делали – используем знакомый <code class="highlighter-rouge">.map</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="nx">generator</span><span class="p">,</span> <span class="nx">func</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">gen</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">generator</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>А вот с валидатором все сложнее. Давайте вспомним, что, по сути, делает <code class="highlighter-rouge">mapFamily</code>? Приводит структуру к верному виду. А что она делает для структуры, которая не содержит нарушений? Правильно, ничего, она никак ее не меняет. Следовательно, мы можем сделать проверку – если <code class="highlighter-rouge">mapFamily</code> ничего не изменила, значит, структура была верной:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">expect</span><span class="p">(</span><span class="nx">mapFamily</span><span class="p">(</span><span class="nx">familyStruct</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">familyStruct</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Вооружившись этой идеей, напишем <code class="highlighter-rouge">makeInvariant</code> для валидатора:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="nx">check</span><span class="p">,</span> <span class="nx">func</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">actual</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">func</span><span class="p">(</span><span class="nx">actual</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">actual</span><span class="p">);</span>
+    <span class="nx">check</span><span class="p">(</span><span class="nx">actual</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Ну и теперь осталось написать только <code class="highlighter-rouge">makeSpecable</code>, которая будет добавлять необходимые методы:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">makeSpecable</span> <span class="o">=</span> <span class="p">(</span><span class="nx">makeNotRequired</span><span class="p">,</span> <span class="nx">makeInvariant</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">specable</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">notRequired</span> <span class="o">=</span> <span class="nx">makeNotRequired</span><span class="p">(</span><span class="nx">specable</span><span class="p">);</span>
+    <span class="nx">notRequired</span><span class="p">.</span><span class="nx">isRequired</span> <span class="o">=</span> <span class="nx">specable</span><span class="p">;</span>
+    <span class="nx">notRequired</span><span class="p">.</span><span class="nx">invariant</span> <span class="o">=</span> <span class="nx">func</span> <span class="o">=&gt;</span> <span class="nx">makeInvariant</span><span class="p">(</span><span class="nx">specable</span><span class="p">,</span> <span class="nx">func</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">notRequired</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<p>Проверяем:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">checkFamilyStruct</span> <span class="o">=</span> <span class="nx">makeFamilySpec</span><span class="p">(</span><span class="nx">jestSpec</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">generatorFamilyStruct</span> <span class="o">=</span> <span class="nx">makeFamilySpec</span><span class="p">(</span><span class="nx">genSpec</span><span class="p">);</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'convertFrom and convertTo properties'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">check</span><span class="p">.</span><span class="nx">it</span><span class="p">(</span><span class="s1">'convertFrom -&gt; convertTo save original shape'</span><span class="p">,</span> <span class="p">[</span><span class="nx">generatorFamilyStruct</span><span class="p">],</span> <span class="nx">structFromBackend</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">structForFrontend</span> <span class="o">=</span> <span class="nx">convertFrom</span><span class="p">(</span><span class="nx">structFromBackend</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">structForBackend</span> <span class="o">=</span> <span class="nx">convertTo</span><span class="p">(</span><span class="nx">structForFrontend</span><span class="p">);</span>
+    <span class="nx">checkFamilyStruct</span><span class="p">(</span><span class="nx">structForBackend</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+<p>Ура, заработало! <a target="_blank" href="https://gist.github.com/typeetfunc/ac4ed98d5014870c797ce138796f5cc4">Гист с полным кодом</a></p>
+
+<p>Вообще, идея иметь одно описание данных и по нему получать и валидаторы, и генераторы придумана, конечно же, не мной.
+Именно на этом базируется довольно новая технология – <a target="_blank" href="http://clojure.org/about/spec">clojure.spec</a>, которая, в свою очередь, черпала вдохновение из <a target="_blank" href="http://docs.racket-lang.org/guide/contracts.html">системы контрактов Racket</a>.</p>
+
+<p>Еще дальше идет проект <a target="_blank" href="http://frenchy64.github.io/2016/08/07/automatic-annotations.html">Automatic annotations</a> для все той же Clojure. Ребята предлагают динамически анализировать юнит-тесты, вычислять по ним возможные ограничения на данные и далее использовать их как для compile-time проверок при помощи  <a target="_blank" href="https://github.com/clojure/core.typed">core.typed</a> (система опциональной типизации для Clojure), так и для run-time проверок при помощи <code class="highlighter-rouge">clojure.spec</code>.</p>
+
+<p>С другой стороны, в Haskell сообществе существуют подходы, при которых тесты, проверяющие свойства, генерируются по типам в программе. <a target="_blank" href="https://www.youtube.com/watch?v=y_auT62ycVc">Вот интересный доклад на эту тему</a>.</p>
+
+<blockquote>
+  <p>Как типы могут помогать писать тесты, так и тесты могут помочь писать типы – между ними явно есть какая-то связь.</p>
+
+</blockquote>
+
+<p>Такие решения позволяют проверять простые ограничения (например, что мы не передаем строки в функцию сложения чисел) статически – и получать мгновенный отклик, а сложные свойства(вроде того, что при любых операциях баланс пользователя не должен быть отрицательным, или то, что сериализация и десериализация любого типа возвращает исходный объект) – проверять динамически при помощи генеративных тестов (что, конечно, более медленно, но зато без необходимости использовать сложные системы типов, включающие <a target="_blank" href="https://www.quora.com/Can-Haskell-theoretically-support-property-checking-as-in-Agda">dependant и refinement типы</a>).</p>
+
+<h4 id="какие-какие-типы">Какие, какие типы?</h4>
+
+<p>Люди, знакомые с языками со статической системой типов, возможно, уже могли заметить схожесть спецификаций, которые мы использовали для описания структуры семьи пользователя, с описанием типов в статических языках.</p>
+
+<p>Сравните:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">makeFamilySpec</span> <span class="o">=</span> <span class="nx">spec</span> <span class="o">=&gt;</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">shape</span><span class="p">({</span>
+  <span class="na">type</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="s1">'espoused'</span><span class="p">,</span> <span class="s1">'single'</span><span class="p">,</span> <span class="s1">'common_law_marriage'</span><span class="p">]),</span>
+  <span class="na">members</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">arrayOf</span><span class="p">(</span>
+    <span class="nx">spec</span><span class="p">.</span><span class="nx">shape</span><span class="p">({</span>
+      <span class="na">role</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">oneOf</span><span class="p">([</span><span class="s1">'sibling'</span><span class="p">,</span> <span class="s1">'child'</span><span class="p">,</span> <span class="s1">'parent'</span><span class="p">,</span> <span class="s1">'spouse'</span><span class="p">]).</span><span class="nx">isRequired</span><span class="p">,</span>
+      <span class="na">fio</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">shape</span><span class="p">({</span>
+        <span class="na">firstname</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">string</span><span class="p">,</span>
+        <span class="na">lastname</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">string</span><span class="p">,</span>
+        <span class="na">middlename</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">string</span>
+      <span class="p">}),</span>
+      <span class="na">dependant</span><span class="p">:</span> <span class="nx">spec</span><span class="p">.</span><span class="nx">bool</span>
+    <span class="p">}).</span><span class="nx">isRequired</span>
+  <span class="p">)</span>
+<span class="p">}).</span><span class="nx">invariant</span><span class="p">(</span><span class="nx">mapFamily</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>С кодом на TypeScript:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">familySpec</span> <span class="p">{</span>
+  <span class="nx">type</span><span class="p">?:</span> <span class="s1">'espoused'</span> <span class="o">|</span> <span class="s1">'single'</span> <span class="o">|</span> <span class="s1">'common_law_marriage'</span><span class="p">,</span>
+  <span class="nx">members</span><span class="p">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="p">{</span>
+    <span class="na">role</span><span class="p">:</span> <span class="s1">'sibling'</span> <span class="o">|</span> <span class="s1">'child'</span> <span class="o">|</span> <span class="s1">'parent'</span> <span class="o">|</span> <span class="s1">'spouse'</span><span class="p">,</span>
+    <span class="nx">fio</span><span class="p">?:</span> <span class="p">{</span>
+      <span class="nx">firstname</span><span class="p">?:</span> <span class="nx">string</span><span class="p">,</span>
+      <span class="nx">lastname</span><span class="p">?:</span> <span class="nx">string</span><span class="p">,</span>
+      <span class="nx">middlename</span><span class="p">?:</span> <span class="nx">string</span>
+    <span class="p">},</span>
+    <span class="nx">dependant</span><span class="p">?:</span> <span class="kr">boolean</span>
+  <span class="p">}</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Согласитесь, эти две декларации крайне схожи по смыслу, хотя синтаксис и разный. Да и наше свойство мы можем легко записать на TypeScript в таком виде:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">convertFrom</span><span class="p">(</span><span class="nx">family</span><span class="p">:</span> <span class="nx">familySpec</span><span class="p">):</span> <span class="nx">familyConverted</span>
+<span class="kd">function</span> <span class="nx">convertTo</span><span class="p">(</span><span class="nx">familyConverted</span><span class="p">:</span> <span class="nx">familyConverted</span><span class="p">):</span> <span class="nx">familySpec</span>
+</code></pre></div></div>
+
+<p>Однако в системе типов TypeScript мы никак не можем указать инвариант <code class="highlighter-rouge">mapFamily</code>, который проверяет структуру, что очень сильно снижает полезность нашей спецификации. Но это только частные проблемы TypeScript и других подобных систем типов. Существуют refinement и dependant типы, которые позволяют <em>статически</em> доказывать соответствие значения некоторому предикату. Простой пример – это тип «натуральные числа»:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">type</span> <span class="nx">nat</span> <span class="o">=</span> <span class="p">{</span><span class="na">v</span> <span class="p">:</span> <span class="nx">number</span> <span class="o">|</span> <span class="mi">0</span> <span class="err">≤</span> <span class="nx">v</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Похожим образом можно выразить и проверку структуры семьи пользователя. И это будет полностью статическая проверка, которая будет гарантированно соблюдаться во всех точках программы. Но при этом нам придется доказать компилятору, что данное свойство соблюдается везде. В случае сложных свойств это может потребовать кода больше, чем необходимо для описания логики приложения.</p>
+
+<p>В итоге вся разница статических и динамических спецификаций сводится к следующему:</p>
+
+<ul>
+  <li>Статические: проверяются при помощи инструментов статической верификации, дают 100% гарантии соотвествия спецификации. Но по умолчанию считают, что ваш код не соотвествует спецификации и заставляют писать много дополнительного кода для того, чтобы доказать, что код все-таки ей соответствует.</li>
+  <li>Динамические: проверяются при помощи генеративного тестирования (и других его видов), дают только вероятностную гарантию. То есть по умолчанию считается, что наш код работает согласно спецификации, и только если тестирование покажет обратное – спецификация считается нарушенной. Также нет необходимости в написании какого-либо специального кода для доказательства корректности нашего кода.</li>
+</ul>
+
+<blockquote>
+  <p>Нет никакого фундаментального противоречия между динамическими и статическими языками и системами типов.</p>
+
+</blockquote>
+
+<p>Возможно, языки будущего вообще не будут разделяться на статические и динамические, а будут просто позволять управлять степенью строгости проверок и их количеством в процессе разработки программы.</p>
+
+<p>На этапах разработки, когда корректность не очень важна (например, на этапе прототипа), мы будем довольствоваться небольшим набором свойств (частично выведенными в run-time из тестов, частично написанными нами), проверять которые будем при помощи property тестов в run-time. Постепенно переходя к этапам, когда корректность выходит на первый план (когда у нас уже много пользователей, много кода, много разработчиков), будем увеличивать количество свойств и начнем проверять их при помощи средств статической верификации (refinement и dependant типы).</p>
+
+<p>В итоге одни и те же свойства мы сможем проверять как статически, так и динамически, в зависимости от того, что важнее для нас на данном этапе разработки – корректность или скорость и удобство разработки.</p>
+
+<h3 id="решение-2--простое">Решение №2 — простое</h3>
+
+<p>Однако мы немного отвлеклись от темы. Нашей целью было доказать, что <code class="highlighter-rouge">convertTo</code> — функция обратная <code class="highlighter-rouge">convertFrom</code>, но нам помешала простановка дефолтных значений. Можно ли было как-то решить эту проблему, не ослабляя требования к свойствам и без изобретения нового API?</p>
+
+<p>Да, конечно, мы можем просто вынести простановку дефолтных значений в отдельную функцию <code class="highlighter-rouge">setDefault</code> (которая будет выполняться перед или после <code class="highlighter-rouge">convertFrom</code>) из <code class="highlighter-rouge">convertFrom</code>, и тогда <code class="highlighter-rouge">convertFrom</code> станет удовлетворять исходному свойству.</p>
+
+<p>Иногда начинающие разработчики (такие, как я, например) при возникновении проблемы сразу бросаются писать код, который ее решает. Зачастую стоит сначала подумать: «может, проблему можно решить совсем на другом уровне?». Например, лучше разбить API модуля согласно тому, какие гарантии нам предоставляют те или иные вызовы – как в нашем случае.</p>
+
+<p>По традиции, для тех, кто недостаточно устал от чтения моей статьи, дам небольшое «домашнее задание»: какому свойству может удовлетворять функция <code class="highlighter-rouge">setDefault</code>? Напомню, что эта функция проставляет значения по умолчанию в структуре данных, если значения отсутствуют.</p>
+
+<h3 id="в-чем-сложности">В чем сложности?</h3>
+
+<p><img src="/images/property-testing/matroskin.png" alt="Матроскин" /></p>
+
+<p>Несмотря на очевидную пользу, property-based тесты (а.к.a QuickCheck тесты) не имеют большой популярности среди разработчиков, даже учитывая то, что уже существует множество реализаций <a target="_blank" href="https://en.wikipedia.org/wiki/QuickCheck">почти для любого языка программирования</a>.</p>
+
+<p>Причина в том, что свойства, пригодные для проверки, таким способом очень трудно выделить в типичном продакшен коде. Но почему?</p>
+
+<p>Во-первых, разработчики не привыкли думать о свойствах, которые предоставляет их решение – соответственно, мы проектируем и разрабатываем систему без опоры на какие-либо свойства. TDD и BDD во многом приучили нас думать и <em>разрабатывать</em> отдельными сценариями – «если ввести A, то вернется B» – то есть, по сути, отдельными «точками». Очень сложно перейти от такого дискретного мышления к более непрерывному – «свойство выполняется для любого A из некоторого множества». Помочь здесь может только практика (как своя, так и чужая): пробуйте искать свойства в своем коде, смотрите как это делают другие (ниже я оставил ссылки на отличные статьи с примерами).</p>
+
+<p>Во-вторых, можно было заметить, что в нашем примере исследуемые функции были чистыми (то есть без сайд-эффектов), но, к сожалению, большая часть фронтенд кода – это функции с сайд-эффектами (от походов в сеть до работы с глобальным состоянием). Общеизвестно, что функции с сайд-эффектами тестировать сложнее, чем чистые функции, определить же их свойства практически невозможно. Сайд-эффект имеет дело с чем-то, что находится за границами тестируемой сущности и обладает заведомо неопределенными свойствами, то есть его поведение непредсказуемо. Есть различные подходы, позволяющие отделять сайд-эффекты от основного кода (бизнес-логики), оставляя его чистым, однако, это тема для отдельной большой статьи.</p>
+
+<h3 id="полезные-ссылки">Полезные ссылки</h3>
+
+<ul>
+  <li><a target="_blank" href="http://fsharpforfunandprofit.com/posts/property-based-testing-2/">Choosing properties for property-based testing</a> – подробно разбираются множество практических кейсов для property-based тестирования (с примерами и даже картинками). Обязательна к прочтению для тех, кто хочет использовать данный подход на практике.</li>
+  <li><a target="_blank" href="http://jsverify.github.io/">JSVerify</a> – еще одна реализация данного подхода на чистом Javascript. По возможности рекомендую использовать именно ее, так как ее намного проще отлаживать, в отличии от <code class="highlighter-rouge">testcheck-js</code> (стектрейсы не уводят в бесконечность ClojureScript рантайма). Имеет большой набор встроенных генераторов и поддержку асинхронных свойств.</li>
+  <li><a target="_blank" href="https://github.com/prayerslayer/js.spec">JS.spec</a> – биндинги к <code class="highlighter-rouge">clojure.spec</code> для JS. Пока очень сырые и не поддерживают из коробки генерацию по спецификациям, только валидацию.</li>
+  <li><a target="_blank" href="https://github.com/omcljs/om/wiki/Applying-Property-Based-Testing-to-User-Interfaces">Applying Property Based Testing to User Interfaces</a> – хорошая статья о реальном применении property-based тестов для тестирования UI (на примере работы со стейтом пользователя). Пример описан для библиотеки Om, но в целом те же практики можно использовать и для тестирования Redux приложений.</li>
+  <li><a target="_blank" href="https://www.youtube.com/watch?v=E_at53wDH1w">Unikernel Full-Stack на Erlang</a> – веселый доклад про верификацию программ. Отвечает на вопрос: «А зачем это нужно на практике?».</li>
+  <li><a target="_blank" href="https://arxiv.org/pdf/1604.02480v1.pdf">Refinement Types for TypeScript</a> – интересный пейпер, в рамках которого создан <a target="_blank" href="https://github.com/UCSD-PL/refscript">верификатор программ на TypeScript</a> на основе refinement типов.</li>
+  <li><a target="_blank" href="https://www.youtube.com/watch?v=5lWIG3XQ2-A">LiquidHaskell: изящные типы.</a> – доклад, просто и понятно объясняющий refinement типы.</li>
+</ul>
+
+<p>Напоследок хотелось бы сказать, что property-based тестирование, как и любые другие методы контроля поведения программ (статические типы, любое другое тестирование, верификация), приносят пользу даже в сам момент начала их применения, так как разработчик начинает задумываться о том, как работает его код, какие свойства и гарантии он предоставляет, и уже это позволяет выявить многие проблемы или просто прийти к лучшему решению c точки зрения архитектуры и API. Не бойтесь пытаться использовать новые практики для анализа своих программ – даже если вам не удастся их внедрить по каким-то причинам, возможно, вы начнете лучше понимать свой код.</p>
+
+<p>Спасибо за внимание!</p>
+
+<p>Возникшие вопросы или мысли по поводу данного подхода можно оставлять в комментариях или в твиттере — <a target="_blank" href="https://twitter.com/bracketsarrows">@bracketsarrows</a>.</p>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter25896539 = new Ya.Metrika({id:25896539,
+						webvisor:true,
+						clickmap:true,
+						trackLinks:true,
+						accurateTrackBounce:true});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/25896539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</body>
+</html>
