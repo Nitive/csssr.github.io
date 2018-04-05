@@ -3,12 +3,12 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>CSSSR - page 3 &#8211; CSSSR</title>
+	<title>CSSSR Garbage Collector #26 &#8211; CSSSR</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.">
+	<meta name="description" content="Странности JavaScript, проблемы новичков и другие интересные материалы из наших чатов">
 	<meta name="author" content="CSSSR">
-	
-	<link rel="canonical" href="/page3/">
+	<meta name="keywords" content="cgc">
+	<link rel="canonical" href="/2018/01/24/cgc-26">
 
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="/css/main.css" type="text/css">
@@ -17,11 +17,11 @@
 	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
 	<meta property="og:locale" content="ru_RU">
 	<meta property="og:type" content="article">
-	<meta property="og:title" content="CSSSR - page 3">
-	<meta property="og:description" content="CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.">
-	<meta property="og:url" content="/page3/index.html">
+	<meta property="og:title" content="CSSSR Garbage Collector #26">
+	<meta property="og:description" content="Странности JavaScript, проблемы новичков и другие интересные материалы из наших чатов">
+	<meta property="og:url" content="/2018/01/24/cgc-26">
 	<meta property="og:site_name" content="CSSSR">
-	
+	<meta property="og:image" content="http://blog.csssr.ru/images/share/cgc-cover-26.jpg">
 
 	<!-- Icons -->
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -39,11 +39,11 @@
 	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
 	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
 	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
-	<meta name="application-name" content="CSSSR - page 3">
-	<meta name="msapplication-tooltip" content="CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.">
+	<meta name="application-name" content="CSSSR Garbage Collector #26">
+	<meta name="msapplication-tooltip" content="Странности JavaScript, проблемы новичков и другие интересные материалы из наших чатов">
 	<meta name="msapplication-TileColor" content="#ffffff">
 	<meta name="msapplication-TileImage" content="/mstile-large.png">
-	<meta name="msapplication-starturl" content="/page3/index.html">
+	<meta name="msapplication-starturl" content="/2018/01/24/cgc-26">
 	<meta name="msapplication-tap-highlight" content="no">
 	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
 	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
@@ -86,52 +86,52 @@
 
 		<div class="post p2 p-responsive wrap" role="main">
 			<div class="measure">
-				<div class="home">
-  <div class="posts">
-    
-      <div class="post">
-        <a href="/2015/03/05/managers-qualities" class="post-link">
-          <p class="post-meta">Mar 5, 2015</p>
-          <h3 class="h2 post-title">Я менеджер, если...</h3>
-          <p class="post-summary">Пост про то, как мы учились нанимать менеджеров, и что из этого получилось.</p>
-        </a>
-      </div>
-    
-      <div class="post">
-        <a href="/2014/09/24/day-of-caps" class="post-link">
-          <p class="post-meta">Sep 24, 2014</p>
-          <h3 class="h2 post-title">ДЕНЬ КАПСА</h3>
-          <p class="post-summary">24 СЕНТЯБРЯ В CSSSR ОТМЕЧАЕТСЯ ДЕНЬ КАПСА.</p>
-        </a>
-      </div>
-    
-      <div class="post">
-        <a href="/2014/08/17/work-in-csssr" class="post-link">
-          <p class="post-meta">Aug 17, 2014</p>
-          <h3 class="h2 post-title">Работа в CSSSR — взгляд изнутри</h3>
-          <p class="post-summary">CSSSR — это не только безупречно сверстанные сайты, CSSSR — это прежде всего команда.</p>
-        </a>
-      </div>
-    
-  </div>
+				
 
-  
 
-  <div class="pagination clearfix mb1 mt4">
-	<div class="left">
+<div class="post-header mb2">
+	<h1>CSSSR Garbage Collector #26</h1>
+	<span class="post-meta">
+		Jan 24, 2018
 		
-			<a class="pagination-item" href="/page2/">Newer</a>
+			by <a target="_blank" class="post-author" rel="author" href="https://twitter.com/ArtyomResh">reshnaut</a>
 		
-	</div>
-	<div class="right">
-		
-			<span class="pagination-item disabled">Older</span>
-		
-	</div>
+	</span><br>
+	
+	<span class="post-meta small">1 minute read</span>
 </div>
 
-</div>
+<article class="post-content">
+	
+<p><img src="/images/share/cgc-cover-26.jpg" alt="CSSSR Garbage Collector" /></p>
 
+<ul>
+  <li>На Хабрахабре вышла <a href="https://habrahabr.ru/post/346926/!">статья</a> про наш open source проект <a href="https://rispa.io/">Rispa</a>!</li>
+  <li><a href="https://codeburst.io/javascript-can-a-1-a-2-a-3-ever-evaluate-to-true-aca13ff4462d"><img src="/images/icons/medium.png" alt="medium" /> <code class="highlighter-rouge">en</code> JavaScript: Can (a==1 &amp;&amp; a==2 &amp;&amp; a==3) ever evaluate to true?</a> — очередные странности JavaScript, за которые мы все его любим  ❤️</li>
+  <li><a href="https://www.youtube.com/watch?v=bEWLTQYIcYE"><img src="/images/icons/youtube.png" alt="yt" /> Поговорим о наших младших товарищах</a> — доклад Сергея Попова о проблемах начинающих специалистов и о том, как мы можем им помочь</li>
+  <li><a href="https://www.javascriptjanuary.com/"><code class="highlighter-rouge">en</code> Статьи о JS</a> на каждый день, есть много интересных</li>
+  <li>Произошел релиз <a href="https://blog.getbootstrap.com/2018/01/18/bootstrap-4/">Bootstrap 4.0</a>! Всего-то 2,5 года от первой альфы прошло</li>
+</ul>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
 			</div>
 		</div>
