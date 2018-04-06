@@ -47,20 +47,12 @@ const connect = selector => target => ({ children, ...props }) => {
   );
 };
 
-const shallowCompare = (newObj, oldObj) => {
-  const newObjKeys = Object.keys(newObj);
-  const oldObjKeys = Object.keys(oldObj);
-  return (
-    newObjKeys.length === oldObjKeys.length && newObjKeys.every(key => newObj[key] === oldObj[key])
-  );
-};
-
 // example
 // ComponentList.js
 export const ComponentList = connect(context => ({ list: context.list }))(ComponentList_raw);
 ```
 
-### unstable_observedBits
+### `unstable_observedBits`
 
 > информация взята из [исходников](https://github.com/facebook/react/blob/4ccf58a94dce323718540b8185a32070ded6094b/packages/react/src/ReactContext.js#L18) и [тестов](https://github.com/facebook/react/blob/4ccf58a94dce323718540b8185a32070ded6094b/packages/react-reconciler/src/__tests__/ReactNewContext-test.internal.js#L498-L526) React, а так же [этой статьи](https://medium.com/@koba04/a-secret-parts-of-react-new-context-api-e9506a4578aa)
 
@@ -82,7 +74,7 @@ const store = {
     foo: 0b01,
     bar: 0b10
   },
-  state = {
+  state: {
     foo: 1,
     bar: 1,
   },
@@ -121,3 +113,10 @@ const Foo = () => (
 ```
 
 Как ясно из названия параметров, данное API еще не стабильно и не стоит использовать его в проде.
+
+### `create-subscription`
+
+Так же в[ исходных кодах React](https://github.com/facebook/react/tree/master/packages/create-subscription) появился пакет [`create-subscription`](https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#adding-event-listeners-or-subscriptions). Раньше для того что бы подписаться и как-то реагировать на внешнее изменения и производить ререндер компонентов, необходимо было делать обертку в виде класса `React.Component`, в которой при поступлении уведомлений вызывать `setState` - т.е. дублировать данные (из пришедшего уведомления) или [`forceUpdate`](https://reactjs.org/docs/react-component.html#forceupdate) - чего, лучше, избегать. Для упрощения подписки теперь можно использовать более прозрачное API `createSubscription` из пакета `create-subscription` официального репозитория React.
+
+### Интерактивная демонстрация использования всех вышеперечисленных технологий
+[![demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/2onvlynj1r)
