@@ -116,9 +116,9 @@ const Foo = () => (
 
 ### `create-subscription`
 
-Так же в[ исходных кодах React](https://github.com/facebook/react/tree/master/packages/create-subscription) появился пакет [`create-subscription`](https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#adding-event-listeners-or-subscriptions). Раньше для того что бы подписаться и как-то реагировать на внешнее изменения и производить ререндер компонентов, необходимо было делать обертку в виде класса `React.Component`, в которой при поступлении уведомлений вызывать `setState` - т.е. дублировать данные (из пришедшего уведомления) или [`forceUpdate`](https://reactjs.org/docs/react-component.html#forceupdate) - чего, лучше, избегать. Для упрощения подписки теперь можно использовать более прозрачное API `createSubscription` из пакета `create-subscription` официального репозитория React.
+Так же в [исходных кодах](https://github.com/facebook/react/tree/master/packages/create-subscription) React появился пакет [`create-subscription`](https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#adding-event-listeners-or-subscriptions). Раньше для того что бы подписаться и как-то реагировать на внешнее изменения и производить пересчет компонентов, необходимо было делать обертку в виде класса `React.Component`, в которой при поступлении уведомлений вызывать `setState` - т.е. дублировать данные (из пришедшего уведомления) или [`forceUpdate`](https://reactjs.org/docs/react-component.html#forceupdate) - чего, лучше, избегать. Для упрощения подписки теперь можно использовать более прозрачное API `createSubscription` из пакета `create-subscription` официального репозитория React.
 
 ### Резюмируя
-Обновление React 16.3 принесло множество интересных изменений и, безусловно, облегчет и повысит качество использования React и разработку вспомогательных библиотек для него. Все вышеописанные технологии можно посмотреть в интерактивной демонстрация:
+Обновление React 16.3 принесло множество интересных изменений и, безусловно, облегчит и повысит качество использования React и разработку вспомогательных библиотек для него. Все вышеописанные технологии можно посмотреть в интерактивной демонстрация:
 
 [![demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/2onvlynj1r)
