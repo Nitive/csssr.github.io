@@ -16,7 +16,7 @@
 
 При этом можно отметить, что `redux` имеет минимальное API для работы с состоянием: подписка и обновление, которое может быть заменено на использование `state` (и `setState`) из обычного `React.Component`. Поэтому правильнее сказать что новый контекст, в каких-то задачах, можно использовать вместо `redux`, подразумевая что вместо него будет использоваться состояние и обновление `React.Component`, а вместо `react-redux` - `React.createContext`. При этом "in box" замены `middleware` из `redux` с использованием контекста нет, в этом случае можно воспользоваться [сторонними библиотеками](https://github.com/didierfranc/react-waterfall#redux-devtools)
 
-### render-prop
+#### render-prop
 
 Как можно заметить, новое API `React.createContext` использует технику render-prop для связи с подписанными компонентами. Подробности реализации и примеры использования есть в [официальной документации](https://reactjs.org/docs/render-props.html), мне же хотелось бы прояснить ключевой плюс и минус этого подхода:
 
@@ -119,6 +119,6 @@ const Foo = () => (
 Так же в[ исходных кодах React](https://github.com/facebook/react/tree/master/packages/create-subscription) появился пакет [`create-subscription`](https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#adding-event-listeners-or-subscriptions). Раньше для того что бы подписаться и как-то реагировать на внешнее изменения и производить ререндер компонентов, необходимо было делать обертку в виде класса `React.Component`, в которой при поступлении уведомлений вызывать `setState` - т.е. дублировать данные (из пришедшего уведомления) или [`forceUpdate`](https://reactjs.org/docs/react-component.html#forceupdate) - чего, лучше, избегать. Для упрощения подписки теперь можно использовать более прозрачное API `createSubscription` из пакета `create-subscription` официального репозитория React.
 
 ### Резюмируя
-Интерактивная демонстрация использования всех вышеперечисленных технологий
+Обновление React 16.3 принесло множество интересных изменений и, безусловно, облегчет и повысит качество использования React и разработку вспомогательных библиотек для него. Все вышеописанные технологии можно посмотреть в интерактивной демонстрация:
 
 [![demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/2onvlynj1r)
