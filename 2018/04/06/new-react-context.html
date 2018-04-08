@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Новый контекст React в деталях &#8211; CSSSR</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Детальный разбор React.createContext и его неанонсированных API">
+	<meta name="author" content="CSSSR">
+	<meta name="keywords" content="post">
+	<link rel="canonical" href="/2018/04/06/new-react-context">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/css/main.css" type="text/css">
+
+	<!-- Open Graph -->
+	<!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Новый контекст React в деталях">
+	<meta property="og:description" content="Детальный разбор React.createContext и его неанонсированных API">
+	<meta property="og:url" content="/2018/04/06/new-react-context">
+	<meta property="og:site_name" content="CSSSR">
+	<meta property="og:image" content="http://blog.csssr.ru/images/react.png">
+
+	<!-- Icons -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<link sizes="57x57" href="/apple-touch-icon-57x57.png" rel="apple-touch-icon">
+	<link sizes="114x114" href="/apple-touch-icon-114x114.png" rel="apple-touch-icon">
+	<link sizes="72x72" href="/apple-touch-icon-72x72.png" rel="apple-touch-icon">
+	<link sizes="144x144" href="/apple-touch-icon-144x144.png" rel="apple-touch-icon">
+	<link sizes="60x60" href="/apple-touch-icon-60x60.png" rel="apple-touch-icon">
+	<link sizes="120x120" href="/apple-touch-icon-120x120.png" rel="apple-touch-icon">
+	<link sizes="76x76" href="/apple-touch-icon-76x76.png" rel="apple-touch-icon">
+	<link sizes="152x152" href="/apple-touch-icon-152x152.png" rel="apple-touch-icon">
+	<link sizes="180x180" href="/apple-touch-icon-180x180.png" rel="apple-touch-icon">
+	<link sizes="192x192" href="/favicon-192x192.png" rel="icon" type="image/png">
+	<link sizes="160x160" href="/favicon-160x160.png" rel="icon" type="image/png">
+	<link sizes="96x96" href="/favicon-96x96.png" rel="icon" type="image/png">
+	<link sizes="16x16" href="/favicon-16x16.png" rel="icon" type="image/png">
+	<link sizes="32x32" href="/favicon-32x32.png" rel="icon" type="image/png">
+	<meta name="application-name" content="Новый контекст React в деталях">
+	<meta name="msapplication-tooltip" content="Детальный разбор React.createContext и его неанонсированных API">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/mstile-large.png">
+	<meta name="msapplication-starturl" content="/2018/04/06/new-react-context">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="msapplication-square70x70logo" content="/mstile-small.png">
+	<meta name="msapplication-square150x150logo" content="/mstile-medium.png">
+	<meta name="msapplication-wide310x150logo" content="/mstile-wide.png">
+	<meta name="msapplication-square310x310logo" content="/mstile-large.png">
+</head>
+
+<body class="">
+	<div class="site-wrap">
+		<header class="site-header px2 px-responsive">
+	<div class="wrap">
+		<nav class="header measure">
+			<a href="/" class="site-title" aria-label="CSSSR"></a>
+			<div class="header-links">
+				<a href="/" class="header-link ">Статьи</a>
+				<a href="/cgc" class="header-link ">CGC</a>
+			</div>
+			
+				<div class="social-icons">
+	<div class="left">
+		
+			<a class="icon icon_github" href="https://github.com/CSSSR" aria-label="GitHub"></a>
+		
+		<a class="icon icon_rss" href="/feed.xml" aria-label="RSS"></a>
+		
+			<a class="icon icon_twitter" href="https://twitter.com/csssr_dev" aria-label="Twitter"></a>
+		
+		
+			<a class="icon icon_envelope" href="mailto:hr@csssr.io" aria-label="Напишите нам"></a>
+		
+	</div>
+</div>
+
+			
+		</nav>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+
+		<div class="post p2 p-responsive wrap" role="main">
+			<div class="measure">
+				
+
+
+<div class="post-header mb2">
+	<h1>Новый контекст React в деталях</h1>
+	<span class="post-meta">
+		Apr 6, 2018
+		
+			by <a target="_blank" class="post-author" rel="author" href="https://github.com/artalar">artalar</a>
+		
+	</span><br>
+	
+	<span class="post-meta small">8 minute read</span>
+</div>
+
+<article class="post-content">
+	<h3 id="что-такое-контекст">Что такое контекст</h3>
+
+<p>В React компонентах, помимо <code class="highlighter-rouge">props</code>, которые могут быть доступны только у первого потомка от родителя, есть контекст, который доступен у всех потомков родителя (объявившего контекст). Это означает, что как бы глубоко компонент ни находился в дереве компонентов, он имеет доступ к контексту, который мог быть создан на сколь угодно много ветвлений дерева выше (ближе к корню). При этом если контекст обновляется — это также вызывает обновление всех подписанных (использующих контекст) потомков. На основе этого API работают все популярные библиотеки, которым необходимо иметь доступ к общим данным из любой глубины приложения: react-redux, react-mobx, react-router, styled-components (ThemeProvider).</p>
+
+<h3 id="проблемы-старого-контекста">Проблемы старого контекста</h3>
+
+<p>В <a href="https://reactjs.org/docs/legacy-context.html">старой версии</a> если на определённый контекст подписан и родитель — <strong>componentA</strong>, и его непосредственный потомок — <strong>componentB</strong>, то при обновлении контекста нужно произвести обновление их обоих. Из-за этого <strong>componentA</strong> обновится 1 раз, а <strong>componentB</strong> два раза: сначала из-за обновления родителя <strong>componentA</strong>, а потом из-за обновления самого контекста (т.к. компонент на него подписан). Соответственно, количество обновлений подписанного компонента === количеству его подписанных родителей + 1 (собственная подписка компонента). Конечно, это неэффективно и трудозатратно с точки зрения производительности.</p>
+
+<p>Существуют техники и алгоритмы обхода подписчиков таким образом, чтобы минимизировать (или полностью исключить) дублирование обновления глубоколежащих подписчиков, но их реализация может быть трудоёмкой. Подробнее об этом <a href="https://youtu.be/TfxfRkNCnmk">рассказывал</a> автор библиотеки <code class="highlighter-rouge">mobx</code>. Также можно посмотреть примеры реализации в <code class="highlighter-rouge">react-redux</code> <a href="https://github.com/reactjs/react-redux/blob/master/src/utils/Subscription.js">тут</a> и <a href="https://github.com/reactjs/react-redux/blob/master/src/components/connectAdvanced.js#L194">тут</a>. Это является проблемой при разработке библиотеки, имеющей глобальное динамическое состояние. Автор должен тратить лишние силы и думать об обновлении подписчиков (реализовывать свой механизм «правильного» обхода поверх механизма контекста), хотя этим, казалось бы, должен заниматься React.</p>
+
+<h3 id="новое-api-reactcreatecontext">Новое API <code class="highlighter-rouge">React.createContext</code></h3>
+
+<p>Многие восприняли новый контекст (<a href="https://reactjs.org/docs/context.html"><code class="highlighter-rouge">React.createContext</code></a> — <a href="https://habrahabr.ru/company/ruvds/blog/348862/">на русском</a>) как замену <code class="highlighter-rouge">redux</code> (или любого другого менеджера состояний), но это как сравнивать тёплое и мягкое. В действительности основная цель обновления контекста — взять на себя задачу по эффективному обновлению подписчиков (<a href="https://twitter.com/dan_abramov/status/976486152197812229">подробности</a> от Дэна Абрамова), чтобы авторы библиотек могли сконцентрироваться на целевом функционале разрабатываемого пакета. Также обновлённый контекст предоставляет более удобный интерфейс для его использования.</p>
+
+<p>При этом можно отметить, что <code class="highlighter-rouge">redux</code> имеет минимальное API для работы с состоянием: подписка и обновление, которое может быть заменено на использование <code class="highlighter-rouge">state</code> (и <code class="highlighter-rouge">setState</code>) из обычного <code class="highlighter-rouge">React.Component</code>. Поэтому правильнее сказать, что новый контекст в каких-то задачах можно использовать вместо <code class="highlighter-rouge">redux</code>, подразумевая, что вместо него будет использоваться состояние и обновление <code class="highlighter-rouge">React.Component</code>, а вместо <code class="highlighter-rouge">react-redux</code> — <code class="highlighter-rouge">React.createContext</code>. При этом “in box” замены <code class="highlighter-rouge">middleware</code> из <code class="highlighter-rouge">redux</code> с использованием контекста нет, в этом случае можно воспользоваться <a href="https://github.com/didierfranc/react-waterfall#redux-devtools">сторонними библиотеками</a>.</p>
+
+<h4 id="render-prop">render-prop</h4>
+
+<p>Как можно заметить, новое API <code class="highlighter-rouge">React.createContext</code> использует технику render-prop для связи с подписанными компонентами. Подробности реализации и примеры использования есть в <a href="https://reactjs.org/docs/render-props.html">официальной документации</a>, мне же хотелось бы прояснить ключевые плюсы и минусы этого подхода:</p>
+
+<ul>
+  <li>(<strong>+</strong>) Исключение коллизии имён при использовании нескольких подписок (<code class="highlighter-rouge">Consumer</code>). Классические HOC осуществляют слияние <code class="highlighter-rouge">props</code>, и если у нас есть несколько HOC подряд, и у каких-то из них совпадают названия передаваемых параметров, то они будут перезатираться, и в конечном объекте <code class="highlighter-rouge">props</code>, который дойдёт до компонента, будет аргумент из последнего HOC. С render-prop эта проблема исчезает, т.к. с каждым передаваемым параметром подписки нужно работать индивидуально в передаваемой функции.</li>
+  <li>(<strong>-</strong>) “Сallback hell” и пересоздание функций или необходимость выносить части render, т.е. отрисовку отображения, в отдельные методы (что нарушает консистентность шаблона). Подробности — в <a href="https://reactjs.org/docs/render-props.html#be-careful-when-using-render-props-with-reactpurecomponent">официальной документации</a>.</li>
+</ul>
+
+<p>Если вам не нравится подход render-prop, и вы хотите использовать «старые добрые» HOC — вот простой пример, как это можно сделать с мемоизацией:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">connect</span> <span class="o">=</span> <span class="nx">selector</span> <span class="o">=&gt;</span> <span class="nx">target</span> <span class="o">=&gt;</span> <span class="p">({</span> <span class="nx">children</span><span class="p">,</span> <span class="p">...</span><span class="nx">props</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">updateFromParent</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">cachedState</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">cachedComponent</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">Consumer</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="nx">context</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">state</span> <span class="o">=</span> <span class="nx">selector</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">props</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">updateFromParent</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">state</span> <span class="o">===</span> <span class="nx">cachedState</span> <span class="o">||</span> <span class="nx">shallowCompare</span><span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">cachedState</span><span class="p">)))</span> <span class="p">{</span>
+          <span class="nx">updateFromParent</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+          <span class="k">return</span> <span class="nx">cachedComponent</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">updateFromParent</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+          <span class="nx">cachedState</span> <span class="o">=</span> <span class="nx">state</span><span class="p">;</span>
+          <span class="k">return</span> <span class="p">(</span><span class="nx">cachedComponent</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="p">{</span> <span class="p">...</span><span class="nx">props</span><span class="p">,</span> <span class="p">...</span><span class="nx">state</span> <span class="p">},</span> <span class="nx">children</span><span class="p">));</span>
+        <span class="p">}</span>
+      <span class="p">}}</span>
+    <span class="o">&lt;</span><span class="sr">/Consumer</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">};</span>
+
+<span class="c1">// example</span>
+<span class="c1">// ComponentList.js</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">ComponentList</span> <span class="o">=</span> <span class="nx">connect</span><span class="p">(</span><span class="nx">context</span> <span class="o">=&gt;</span> <span class="p">({</span> <span class="na">list</span><span class="p">:</span> <span class="nx">context</span><span class="p">.</span><span class="nx">list</span> <span class="p">}))(</span><span class="nx">ComponentList_raw</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="unstable_observedbits"><code class="highlighter-rouge">unstable_observedBits</code></h3>
+
+<blockquote>
+  <p>информация взята из <a href="https://github.com/facebook/react/blob/4ccf58a94dce323718540b8185a32070ded6094b/packages/react/src/ReactContext.js#L18">исходников</a> и <a href="https://github.com/facebook/react/blob/4ccf58a94dce323718540b8185a32070ded6094b/packages/react-reconciler/src/__tests__/ReactNewContext-test.internal.js#L498-L526">тестов</a> React, а также из <a href="https://medium.com/@koba04/a-secret-parts-of-react-new-context-api-e9506a4578aa">этой статьи</a></p>
+</blockquote>
+
+<p>Публично об этом ещё не заявляли, и в официальной документации информации об этой части API нет, но, помимо вышесказанного, у <code class="highlighter-rouge">React.createContext</code> есть второй аргумент, принимающий функцию, а у <code class="highlighter-rouge">Consumer</code> есть параметр <code class="highlighter-rouge">unstable_observedBits</code>, принимающий битовую маску сопоставления. Это аналогично <code class="highlighter-rouge">shouldComponentUpdate</code> у <code class="highlighter-rouge">React.Component</code>. Разберём подробнее.</p>
+
+<h4 id="битовые-маски">Битовые маски</h4>
+<p><a href="https://ru.wikipedia.org/wiki/Битовая_маска">Битовые маски</a> применяются очень давно, в частности, для сопоставления прав доступа в Linux. Суть заключается в том, что каждый бит в своей очерёдности на битовой маске отвечает за <code class="highlighter-rouge">true</code> или <code class="highlighter-rouge">false</code> по отношению к определённому правилу. Удобность работы с побитовыми масками заключается в том, что для обновления значения достаточно осуществить побитовую операцию оригинальной маски с маской правила, в которой для установки значения в <code class="highlighter-rouge">true</code> необходимо применить “ИЛИ” — <code class="highlighter-rouge">|</code>, где управляющий бит === <code class="highlighter-rouge">1</code>, а остальные — <code class="highlighter-rouge">0</code>, а для установки значения в <code class="highlighter-rouge">false</code> необходимо применить “И” — <code class="highlighter-rouge">&amp;</code>, где управляющий бит === <code class="highlighter-rouge">0</code>, а остальные — <code class="highlighter-rouge">1</code>. Это может поначалу звучать сложно, но на практике это простой, наглядный, а главное, самый быстрый способ записи и управления диапазоном значений <code class="highlighter-rouge">true</code> \ <code class="highlighter-rouge">false</code>.</p>
+
+<h4 id="использование">Использование</h4>
+<p>Битовая маска в описании и примерах ниже используется для отслеживания изменений в <code class="highlighter-rouge">state</code>. Каждому значению <code class="highlighter-rouge">state</code> должен соответствовать бит в битовой маске.</p>
+
+<p>Второй аргумент <code class="highlighter-rouge">React.createContext</code> принимает функцию, которая на вход получает предыдущее и обновлённое состояние, а на выходе должна вернуть обновлённую битовую маску. В свою очередь <code class="highlighter-rouge">Consumer</code> принимает в <code class="highlighter-rouge">unstable_observedBits</code> битовую маску, которая содержит биты положительных значений, отвечающих за отслеживаемые позиции <code class="highlighter-rouge">state</code>. При поступлении изменений <code class="highlighter-rouge">Consumer</code> сначала <a href="https://github.com/facebook/react/blob/4ccf58a94dce323718540b8185a32070ded6094b/packages/react-reconciler/src/ReactFiberBeginWork.js#L988">сравнивает</a> обновлённую битовую маску с <code class="highlighter-rouge">unstable_observedBits</code>, и если их побитовое сложение возвращает не <code class="highlighter-rouge">0</code>, то render-prop будет вызван, иначе — нет. Если второй аргумент <code class="highlighter-rouge">React.createContext</code> и <code class="highlighter-rouge">unstable_observedBits</code> у <code class="highlighter-rouge">Consumer</code> не заданы — вызов render-prop будет происходить на любое изменение контекста.</p>
+
+<h4 id="пример">Пример</h4>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">observedBits</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="mb">0b01</span><span class="p">,</span>
+    <span class="na">bar</span><span class="p">:</span> <span class="mb">0b10</span>
+  <span class="p">},</span>
+  <span class="na">state</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">bar</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="nx">update</span><span class="p">(</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="nx">cb</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">const</span> <span class="nx">StoreContext</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createContext</span><span class="p">(</span>
+  <span class="nx">store</span><span class="p">.</span><span class="nx">state</span><span class="p">,</span>
+  <span class="p">(</span><span class="nx">prev</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="c1">// поменялся `foo`</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">prev</span><span class="p">.</span><span class="nx">foo</span> <span class="o">!==</span> <span class="nx">next</span><span class="p">.</span><span class="nx">foo</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">result</span> <span class="o">|=</span> <span class="nx">store</span><span class="p">.</span><span class="nx">observedBits</span><span class="p">.</span><span class="nx">foo</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// поменялся `bar`</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">prev</span><span class="p">.</span><span class="nx">bar</span> <span class="o">!==</span> <span class="nx">next</span><span class="p">.</span><span class="nx">bar</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">result</span> <span class="o">|=</span> <span class="nx">store</span><span class="p">.</span><span class="nx">observedBits</span><span class="p">.</span><span class="nx">bar</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">Foo</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">(</span>
+  <span class="o">&lt;</span><span class="nx">StoreContext</span><span class="p">.</span><span class="nx">Consumer</span> <span class="nx">unstable_observedBits</span><span class="o">=</span><span class="p">{</span><span class="nx">store</span><span class="p">.</span><span class="nx">observedBits</span><span class="p">.</span><span class="nx">foo</span><span class="p">}</span><span class="o">&gt;</span>
+    <span class="p">{({</span><span class="nx">foo</span><span class="p">,</span> <span class="nx">update</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">(</span> <span class="c1">// если поменяется `bar`, этот код не выполнится</span>
+      <span class="o">&lt;</span><span class="nx">button</span>
+        <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">update</span><span class="p">((</span><span class="nx">state</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({...</span><span class="nx">state</span><span class="p">,</span> <span class="na">foo</span><span class="p">:</span> <span class="nx">state</span><span class="p">.</span><span class="nx">foo</span> <span class="o">+</span> <span class="mi">1</span><span class="p">}))}</span>
+      <span class="o">&gt;</span>
+        <span class="nx">increment</span> <span class="s2">"foo = {foo}"</span>
+      <span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>    <span class="p">)}</span>
+  <span class="o">&lt;</span><span class="sr">/StoreContext.Consumer</span><span class="err">&gt;
+</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Как ясно из названия параметров, данное API ещё не стабильно и не стоит использовать его в проде.</p>
+
+<h3 id="create-subscription"><code class="highlighter-rouge">create-subscription</code></h3>
+
+<p>Также в <a href="https://github.com/facebook/react/tree/master/packages/create-subscription">исходных кодах</a> React появился пакет <a href="https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#adding-event-listeners-or-subscriptions"><code class="highlighter-rouge">create-subscription</code></a>. Раньше для того, чтобы подписаться и как-то реагировать на внешние изменения и производить ререндер компонентов, необходимо было делать обёртку в виде класса <code class="highlighter-rouge">React.Component</code>, в которой при поступлении уведомлений вызывать <code class="highlighter-rouge">setState</code> — т.е. дублировать данные из пришедшего уведомления — или <a href="https://reactjs.org/docs/react-component.html#forceupdate"><code class="highlighter-rouge">forceUpdate</code></a> — чего лучше избегать. Для упрощения подписки теперь можно использовать более прозрачное API <code class="highlighter-rouge">createSubscription</code> из пакета <code class="highlighter-rouge">create-subscription</code> официального репозитория React.</p>
+
+<h3 id="резюмируя">Резюмируя</h3>
+<p>Обновление React 16.3 принесло множество интересных изменений и, безусловно, облегчит и повысит качество использования React и разработку вспомогательных библиотек для него. Все вышеописанные технологии можно посмотреть в интерактивной демонстрации:</p>
+
+<p><a href="https://codesandbox.io/s/2onvlynj1r"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="demo" /></a></p>
+
+</article>
+
+
+
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	var disqus_shortname = 'blogcsssrru';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter25896539 = new Ya.Metrika({id:25896539,
+						webvisor:true,
+						clickmap:true,
+						trackLinks:true,
+						accurateTrackBounce:true});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/25896539" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+</body>
+</html>
