@@ -1,4 +1,12 @@
-# Новый контекст React в деталях
+---
+layout: post
+title: 'Новый контекст React в деталях'
+summary: "Детальный разбор React.createContext и его неанонсированных API"
+author: artalar
+authorLink: https://github.com/artalar
+image: /images/react.png
+category: post
+---
 
 ### Что такое контекст
 
