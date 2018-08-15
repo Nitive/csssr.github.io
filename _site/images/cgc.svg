@@ -1,0 +1,8 @@
+<svg viewBox="0 0 554 480" xmlns="http://www.w3.org/2000/svg">
+  <linearGradient x1="0%" y1="100%" x2="100%" y2="50%" id="cgcGradient">
+    <stop stop-color="#F8F840" offset="12.5%" />
+    <stop stop-color="#F82828" offset="75%" />
+  </linearGradient>
+  <path d="M244.981 287.993v63.992h-97.513l-36.974 64.068h70.505v-32.058h63.992v32.058H245v63.938H.001L110.799 288h6.213v-.007h127.969z" fill="url(#cgcGradient)" />
+  <path d="M309 479.991v-63.938h134.506L369.606 288H443.2l110.799 191.991H309zM276.999 127.53L221.327 224h-73.594L276.999.008 406.266 224h-73.595l-55.672-96.47z" fill="#000" />
+</svg>

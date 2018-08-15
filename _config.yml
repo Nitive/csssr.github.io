@@ -1,0 +1,44 @@
+# Site settings
+title:       CSSSR
+author:      CSSSR
+email:       hr@csssr.io
+description: CSSSR — веб-студия по фронтенд-разработке. HTML, CSS, JavaScript.
+
+# Optional features
+animated:           false
+show_related_posts: false
+show_post_footers:  false
+
+# Disqus post comments
+# (leave blank to disable Disqus)
+disqus_shortname:
+
+# Social icons
+show_social_icons: true
+github_username: CSSSR
+stackoverflow_id:
+twitter_username: csssr_dev
+google_plus_id:
+linkedin_username:
+bitcoin_url:
+paypal_url:
+flattr_button:
+
+# Build settings
+plugins:
+  - jekyll-paginate-v2
+markdown:     kramdown
+kramdown:
+  input: GFM
+
+permalink: /:year/:month/:day/:title
+
+pagination:
+  enabled: true
+  per_page: 10
+  permalink: '/page:num/'
+  sort_reverse: true
+
+sass:
+  compressed: true
+  style: :compressed
